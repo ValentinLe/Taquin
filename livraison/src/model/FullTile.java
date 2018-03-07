@@ -8,4 +8,8 @@ public class FullTile extends Tile {
         super(x,y);
         this.id = id;
     }
+    
+    public String toString() {
+        return "" + this.id;
+    }
 }

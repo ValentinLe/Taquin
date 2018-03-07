@@ -1,9 +1,11 @@
-
 package model;
 
 public class FullTile extends Tile {
     
-    public FullTile(int x, int y) {
+    private int id;
+    
+    public FullTile(int x, int y, int id) {
         super(x,y);
+        this.id = id;
     }
 }

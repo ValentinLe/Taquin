@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Board {
 
@@ -63,8 +64,21 @@ public class Board {
 			}
 		}
 
-		public void shuffle() {
-
+		public void shuffle(int nb_iter) {
+			Random gen = new Random();
+			for (int i=1; i<nb_iter; i++) {
+				ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
+				this.move(tab.get(gen.nextInt(tab.size())));
+			}
+			ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
+			while(tab.contains(Direction.DOWN)){
+				this.move(Direction.DOWN);
+				tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
+			}
+			while(tab.contains(Direction.RIGHT)){
+				this.move(Direction.RIGHT);
+				tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
+			}
 		}
 
 		public void move(Direction d){
@@ -80,31 +94,20 @@ public class Board {
 				}
 			}
 
-			public ArrayList<ArrayList<Integer>> neighbours(int x, int y) {
-				ArrayList<ArrayList<Integer>> listCoord = new ArrayList<>();
-				ArrayList<Integer> temp=new ArrayList<Integer>();
+			public ArrayList<Direction> neighbours(int x, int y) {
+				ArrayList<Direction> listCoord = new ArrayList<>();
 				if (x < this.width - 1) {
-					temp.add(x+1);
-					temp.add(y);
-					listCoord.add(temp);
-					temp.clear();
+					listCoord.add(Direction.RIGHT);
 				}
 				if (x > 0) {
-					temp.add(x-1);
-					temp.add(y);
-					listCoord.add(temp);
-					temp.clear();
+					listCoord.add(Direction.LEFT);
 				}
 				if (y < this.height - 1) {
-					temp.add(x);
-					temp.add(y+1);
-					listCoord.add(temp);
-					temp.clear();
+					listCoord.add(Direction.UP);
+					System.out.println(Direction.UP.getCoords());
 				}
 				if (y > 0) {
-					temp.add(x);
-					temp.add(y-1);
-					listCoord.add(temp);
+					listCoord.add(Direction.DOWN);
 				}
 				return listCoord;
 			}

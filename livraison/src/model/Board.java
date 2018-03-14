@@ -45,6 +45,10 @@ public class Board {
         return this.height;
     }
 
+		public EmptyTile getEmptyTile() {
+				return this.empty_tile;
+		}
+
 		public void createGrid() {
 			this.grid=new Tile[this.width][this.height];
 			for (int i=0; i<this.width;i++){
@@ -60,7 +64,7 @@ public class Board {
 		}
 
 		public void shuffle() {
-			
+
 		}
 
 		public void move(Direction d){

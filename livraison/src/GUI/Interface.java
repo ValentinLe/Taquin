@@ -8,23 +8,24 @@ import java.awt.event.KeyEvent;
 import model.*;
 
 public class Interface extends JFrame {
-    
+
     private Board b;
     private int tuileSize;
-    
+
     public Interface(Board b) {
         this.b = b;
         this.tuileSize = 200;
         this.setTitle("Taquin");
         this.setResizable(false);
-        
-        
-        
+
+
+
         View game = new View(this.b,this.tuileSize);
         game.setPreferredSize(new Dimension(this.b.getWidth()*this.tuileSize+1,this.b.getHeight()*this.tuileSize+1));
-        JLabel counter = new JLabel("Nombre de coups joués : ");
+        game.setBackground(Color.black);
+        JLabel counter = new JLabel("Nombre de coups : ");
         counter.setBackground(Color.green);
-        
+
         this.setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
         gc.gridx = 0;
@@ -37,6 +38,6 @@ public class Interface extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
-    
-    
+
+
 }

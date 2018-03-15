@@ -13,6 +13,10 @@ public class FullTile extends Tile {
 			this(-1,-1,0);
 		}
 
+		public int getId() {
+			return this.id;
+		}
+
     public String toString() {
         return "" + this.id;
     }

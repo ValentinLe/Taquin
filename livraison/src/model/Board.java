@@ -64,11 +64,15 @@ public class Board {
 			}
 		}
 
-		public void shuffle(int nb_iter) {
+		public void randomMove() {
 			Random gen = new Random();
+			ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
+			this.move(tab.get(gen.nextInt(tab.size())));
+		}
+
+		public void shuffle(int nb_iter) {
 			for (int i=1; i<nb_iter; i++) {
-				ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
-				this.move(tab.get(gen.nextInt(tab.size())));
+				this.randomMove();
 			}
 			ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
 			while(tab.contains(Direction.DOWN)){
@@ -79,6 +83,25 @@ public class Board {
 				this.move(Direction.RIGHT);
 				tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
 			}
+		}
+
+		public boolean isSolved() {
+			for (int i=0; i<this.width;i++) {
+				for (int j=0; j<this.height;j++) {
+					if (this.grid[i][j] instanceof FullTile && ((FullTile)this.grid[i][j]).getId()!=i*this.width+j) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
+		public void solve() {
+			while (!(this.isSolved())) {
+					this.randomMove();
+					System.out.println(this);
+			}
+			System.out.println("résolu");
 		}
 
 		public void move(Direction d){
@@ -103,11 +126,11 @@ public class Board {
 					listCoord.add(Direction.LEFT);
 				}
 				if (y < this.height - 1) {
-					listCoord.add(Direction.UP);
-					System.out.println(Direction.UP.getCoords());
+					listCoord.add(Direction.DOWN);
+					System.out.println(Direction.DOWN.getCoords());
 				}
 				if (y > 0) {
-					listCoord.add(Direction.DOWN);
+					listCoord.add(Direction.UP);
 				}
 				return listCoord;
 			}

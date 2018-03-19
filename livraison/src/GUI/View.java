@@ -18,6 +18,7 @@ public class View extends JPanel implements ModelListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         int size = this.tuileSize;
+        g.setFont(new Font("Monospace", Font.BOLD, 50));
 
         for (int i = 0; i < this.model.getWidth(); i++) {
             for (int j = 0; j < this.model.getHeight(); j++) {
@@ -26,7 +27,7 @@ public class View extends JPanel implements ModelListener {
                   g.fillRect(size*i, size*j,size, size);
                   g.setColor(Color.black);
                   g.drawRect(size*i, size*j,size, size);
-                  g.drawString(Integer.toString(this.model.getWidth()*j + i + 1),size*i+(size/2), size*j+(size/2));
+                  g.drawString(Integer.toString(this.model.getWidth()*j + i + 1),size*i+(size/2)-15, size*j+(size/2)+15);
                 }
             }
         }

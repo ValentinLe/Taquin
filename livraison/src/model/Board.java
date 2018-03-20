@@ -11,10 +11,10 @@ public class Board {
 		private EmptyTile empty_tile;
 
 		public enum Direction {
-			UP (-1,0),
-			LEFT (0,-1),
-			DOWN (1,0),
-			RIGHT (0,1);
+			UP (0,-1),
+			LEFT (-1,0),
+			DOWN (0,1),
+			RIGHT (1,0);
 
 			private final int x;
 			private final int y;
@@ -68,10 +68,13 @@ public class Board {
 			Random gen = new Random();
 			ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
 			this.move(tab.get(gen.nextInt(tab.size())));
+      System.out.println("Après move:\n"+this);
+      System.out.println("Pos case vide: ("+this.getEmptyTile().getX()+","+this.getEmptyTile().getY()+")");
 		}
 
 		public void shuffle(int nb_iter) {
-			for (int i=1; i<nb_iter; i++) {
+			for (int i=1; i<nb_iter+1; i++) {
+        //System.out.println(this);
 				this.randomMove();
 			}
 			ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
@@ -113,21 +116,23 @@ public class Board {
 					tmp=this.grid[x][y];
 					this.grid[x][y]=this.grid[this.empty_tile.getX()][this.empty_tile.getY()];
 					this.grid[this.empty_tile.getX()][this.empty_tile.getY()]=tmp;
+          this.empty_tile.setX(this.empty_tile.getX()+d.getCoords().get(0));
+          this.empty_tile.setY(this.empty_tile.getY()+d.getCoords().get(1));
 					}
 				}
 			}
 
 			public ArrayList<Direction> neighbours(int x, int y) {
 				ArrayList<Direction> listCoord = new ArrayList<>();
-				if (x < this.width - 1) {
+				if (x < this.width -1) {
 					listCoord.add(Direction.RIGHT);
 				}
 				if (x > 0) {
 					listCoord.add(Direction.LEFT);
 				}
-				if (y < this.height - 1) {
+				if (y < this.height -1) {
 					listCoord.add(Direction.DOWN);
-					System.out.println(Direction.DOWN.getCoords());
+					//System.out.println(Direction.DOWN.getCoords());
 				}
 				if (y > 0) {
 					listCoord.add(Direction.UP);

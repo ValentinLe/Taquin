@@ -68,13 +68,12 @@ public class Board {
 			Random gen = new Random();
 			ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
 			this.move(tab.get(gen.nextInt(tab.size())));
-      System.out.println("Après move:\n"+this);
-      System.out.println("Pos case vide: ("+this.getEmptyTile().getX()+","+this.getEmptyTile().getY()+")");
+      //System.out.println("Après move:\n"+this);
+      //System.out.println("Pos case vide: ("+this.getEmptyTile().getX()+","+this.getEmptyTile().getY()+")");
 		}
 
 		public void shuffle(int nb_iter) {
 			for (int i=1; i<nb_iter+1; i++) {
-        //System.out.println(this);
 				this.randomMove();
 			}
 			ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
@@ -139,6 +138,23 @@ public class Board {
 				}
 				return listCoord;
 			}
+
+      public boolean isFinished() {
+        boolean gamefinished = false;
+        for (int i=0; i<this.width; i++) {
+          for (int j=0; j<this.height; j++) {
+            if (!(this.grid[i][j] instanceof EmptyTile)) {
+              if (i*j != ((FullTile)this.grid[i][j]).getId()) {
+                gamefinished = false;
+                return gamefinished;
+              } else {
+                gamefinished = true;
+              }
+            }
+          }
+        }
+        return gamefinished;
+      }
 
 		public String toString() {
 			String ch="";

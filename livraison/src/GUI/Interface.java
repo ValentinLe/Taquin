@@ -61,7 +61,7 @@ public class Interface extends JFrame {
             }
         });
         
-        addMouseListener(new MouseListener() {
+        game.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 
@@ -69,7 +69,11 @@ public class Interface extends JFrame {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                
+                int x = e.getX();
+                int y = e.getY();
+                x = Math.round(x/Interface.this.tuileSize);
+                y = Math.round(y/Interface.this.tuileSize);
+                System.out.println(x + " " + y);
             }
 
             @Override

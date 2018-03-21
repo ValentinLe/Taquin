@@ -11,6 +11,7 @@ public class Main {
 		test.shuffle(10000);
 		System.out.println(test);
 		//test.solve();
+		int nb_moves=0;
 		while (!(test.isSolved())) {
 			Scanner sc= new Scanner(System.in);
 			EmptyTile empty = test.getEmptyTile();
@@ -33,7 +34,8 @@ public class Main {
 			if (selectMove.equals("d") && (test.neighbours(empty.getX(),empty.getY()).contains(Board.Direction.RIGHT))) {
 				test.move(Board.Direction.RIGHT);
 			}
+			nb_moves+=1;
 		}
-
+		System.out.println("résolu en " + nb_moves + " coups");
 	}
 }

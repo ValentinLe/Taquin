@@ -9,6 +9,7 @@ public class Board {
     private int height;
 		private Tile[][] grid;
 		private EmptyTile empty_tile;
+		private Direction memory;
 
 		public enum Direction {
 			UP (-1,0),
@@ -36,6 +37,7 @@ public class Board {
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
+				this.memory = Direction.DOWN;
     }
 
     public int getWidth() {
@@ -53,7 +55,7 @@ public class Board {
 		public Tile[][] getGrid() {
 			return this.grid;
 		}
-		
+
 		public void createGrid() {
 			this.grid=new Tile[this.width][this.height];
 			for (int i=0; i<this.width;i++){
@@ -71,7 +73,9 @@ public class Board {
 		public void randomMove() {
 			Random gen = new Random();
 			ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
-			this.move(tab.get(gen.nextInt(tab.size())));
+			tab.remove(this.memory);
+			this.memory=tab.get(gen.nextInt(tab.size()));
+			this.move(this.memory);
       //System.out.println("Après move:\n"+this);
       //System.out.println("Pos case vide: ("+this.getEmptyTile().getX()+","+this.getEmptyTile().getY()+")");
 		}

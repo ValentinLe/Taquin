@@ -10,6 +10,7 @@ import model.*;
 public class Interface extends JFrame {
 
     private Board b;
+    private View game;
     private int tuileSize;
 
     public Interface(Board b) {
@@ -18,9 +19,7 @@ public class Interface extends JFrame {
         this.setTitle("Taquin");
         this.setResizable(false);
 
-
-
-        View game = new View(this.b,this.tuileSize);
+        this.game = new View(this.b,this.tuileSize);
         game.setPreferredSize(new Dimension(this.b.getWidth()*this.tuileSize+1,this.b.getHeight()*this.tuileSize+1));
         game.setBackground(Color.black);
         JLabel counter = new JLabel("Nombre de coups : ");
@@ -33,6 +32,84 @@ public class Interface extends JFrame {
         this.add(game,gc);
         gc.gridy = 1;
         this.add(counter,gc);
+        
+        addKeyListener(new KeyListener(){
+           @Override
+           public void keyPressed(KeyEvent e) {
+               if (e.getKeyCode() == KeyEvent.VK_UP) {
+                   System.out.println("haut");
+               }
+               if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                   System.out.println("bas");
+               }
+               if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                   System.out.println("gauche");
+               }
+               if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                   System.out.println("droit");
+               }
+           } 
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                
+            }
+        });
+        
+        game.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                x = Math.round(x/Interface.this.tuileSize);
+                y = Math.round(y/Interface.this.tuileSize);
+                System.out.println(x + " " + y);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                
+            }
+        });
+        
+        game.addMouseMotionListener(new MouseMotionListener(){
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                x = Math.round(x/Interface.this.tuileSize);
+                y = Math.round(y/Interface.this.tuileSize);
+                Interface.this.game.setPosition(x,y);
+                Interface.this.game.updateUI();
+            }
+            
+        });
+        
         pack();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

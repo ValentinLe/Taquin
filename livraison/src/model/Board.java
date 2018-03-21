@@ -11,10 +11,10 @@ public class Board {
 		private EmptyTile empty_tile;
 
 		public enum Direction {
-			UP (0,-1),
-			LEFT (-1,0),
-			DOWN (0,1),
-			RIGHT (1,0);
+			UP (-1,0),
+			LEFT (0,-1),
+			DOWN (1,0),
+			RIGHT (0,1);
 
 			private final int x;
 			private final int y;
@@ -39,17 +39,21 @@ public class Board {
     }
 
     public int getWidth() {
-        return this.width;
+      return this.width;
     }
 
     public int getHeight() {
-        return this.height;
+      return this.height;
     }
 
 		public EmptyTile getEmptyTile() {
-				return this.empty_tile;
+			return this.empty_tile;
 		}
 
+		public Tile[][] getGrid() {
+			return this.grid;
+		}
+		
 		public void createGrid() {
 			this.grid=new Tile[this.width][this.height];
 			for (int i=0; i<this.width;i++){
@@ -99,62 +103,47 @@ public class Board {
 		}
 
 		public void solve() {
+			int nb_moves=0;
 			while (!(this.isSolved())) {
 					this.randomMove();
+					nb_moves+=1;
 					System.out.println(this);
 			}
-			System.out.println("résolu");
+			System.out.println("résolu en " + nb_moves + " coups");
 		}
 
 		public void move(Direction d){
-			if (this.empty_tile.getX()+d.getCoords().get(0)<this.width){
-				if (this.empty_tile.getY()+d.getCoords().get(1)<this.height){
-					Tile tmp = new FullTile();
-					int x=this.empty_tile.getX()+d.getCoords().get(0);
-					int y=this.empty_tile.getY()+d.getCoords().get(1);
-					tmp=this.grid[x][y];
-					this.grid[x][y]=this.grid[this.empty_tile.getX()][this.empty_tile.getY()];
+			int dest_x=this.empty_tile.getX()+d.getCoords().get(0);
+			int dest_y=this.empty_tile.getY()+d.getCoords().get(1);
+			if (dest_x>=0 && dest_x<this.width){
+				if (dest_y>=0 && dest_y<this.height){
+					int xp=this.empty_tile.getX();
+					int yp=this.empty_tile.getY();
+					Tile tmp = new FullTile(xp,yp,((FullTile)this.grid[dest_x][dest_y]).getId());
+					this.grid[dest_x][dest_y]=this.grid[this.empty_tile.getX()][this.empty_tile.getY()];
 					this.grid[this.empty_tile.getX()][this.empty_tile.getY()]=tmp;
-          this.empty_tile.setX(this.empty_tile.getX()+d.getCoords().get(0));
-          this.empty_tile.setY(this.empty_tile.getY()+d.getCoords().get(1));
+          this.empty_tile.setX(dest_x);
+          this.empty_tile.setY(dest_y);
 					}
 				}
 			}
 
 			public ArrayList<Direction> neighbours(int x, int y) {
 				ArrayList<Direction> listCoord = new ArrayList<>();
-				if (x < this.width -1) {
+				if (y < this.height -1) {
 					listCoord.add(Direction.RIGHT);
 				}
-				if (x > 0) {
+				if (y > 0) {
 					listCoord.add(Direction.LEFT);
 				}
-				if (y < this.height -1) {
+				if (x < this.width -1) {
 					listCoord.add(Direction.DOWN);
-					//System.out.println(Direction.DOWN.getCoords());
 				}
-				if (y > 0) {
+				if (x > 0) {
 					listCoord.add(Direction.UP);
 				}
 				return listCoord;
 			}
-
-      public boolean isFinished() {
-        boolean gamefinished = false;
-        for (int i=0; i<this.width; i++) {
-          for (int j=0; j<this.height; j++) {
-            if (!(this.grid[i][j] instanceof EmptyTile)) {
-              if (i*j != ((FullTile)this.grid[i][j]).getId()) {
-                gamefinished = false;
-                return gamefinished;
-              } else {
-                gamefinished = true;
-              }
-            }
-          }
-        }
-        return gamefinished;
-      }
 
 		public String toString() {
 			String ch="";

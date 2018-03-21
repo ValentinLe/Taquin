@@ -6,8 +6,6 @@ public class EmptyTile extends Tile {
         super(x,y);
     }
 
-		
-
     public String toString() {
         return " ";
     }

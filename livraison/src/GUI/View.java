@@ -18,11 +18,14 @@ public class View extends JPanel implements ModelListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         int size = this.tuileSize;
+        int emptyX = this.model.getEmptyTile().getX();
+        int emptyY = this.model.getEmptyTile().getY();
+
         g.setFont(new Font("Monospace", Font.BOLD, 50));
 
         for (int i = 0; i < this.model.getWidth(); i++) {
             for (int j = 0; j < this.model.getHeight(); j++) {
-                if (!(i == this.model.getEmptyTile().getX() && j == this.model.getEmptyTile().getY())) {
+                if (!(i == emptyX && j == emptyY)) {
                   g.setColor(Color.white);
                   g.fillRect(size*i, size*j,size, size);
                   g.setColor(Color.black);

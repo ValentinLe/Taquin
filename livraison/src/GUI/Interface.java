@@ -32,7 +32,7 @@ public class Interface extends JFrame {
         this.add(game,gc);
         gc.gridy = 1;
         this.add(counter,gc);
-        
+
         addKeyListener(new KeyListener(){
            @Override
            public void keyPressed(KeyEvent e) {
@@ -48,23 +48,23 @@ public class Interface extends JFrame {
                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                    System.out.println("droit");
                }
-           } 
+           }
 
             @Override
             public void keyTyped(KeyEvent e) {
-                
+
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                
+
             }
         });
-        
+
         game.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                
+
             }
 
             @Override
@@ -78,24 +78,25 @@ public class Interface extends JFrame {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                
+
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                
+
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                
+              Interface.this.game.setPosition(-1,-1);
+              Interface.this.game.updateUI();
             }
         });
-        
+
         game.addMouseMotionListener(new MouseMotionListener(){
             @Override
             public void mouseDragged(MouseEvent e) {
-                
+
             }
 
             @Override
@@ -107,9 +108,9 @@ public class Interface extends JFrame {
                 Interface.this.game.setPosition(x,y);
                 Interface.this.game.updateUI();
             }
-            
+
         });
-        
+
         pack();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

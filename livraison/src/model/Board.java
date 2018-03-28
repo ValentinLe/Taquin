@@ -5,11 +5,12 @@ import java.util.Random;
 
 public class Board {
 
-    private int width;
-    private int height;
+		private int width;
+		private int height;
 		private Tile[][] grid;
 		private EmptyTile empty_tile;
 		private Direction memory;
+		private int nb_moves;
 
 		public enum Direction {
 			UP (-1,0),
@@ -34,19 +35,23 @@ public class Board {
 			}
 		}
 
-    public Board(int width, int height) {
-        this.width = width;
-        this.height = height;
+		public Board(int width, int height) {
+				this.width = width;
+				this.height = height;
 				this.memory = Direction.DOWN;
-    }
+		}
 
-    public int getWidth() {
-      return this.width;
-    }
+		public int getMoveCount() {
+			return this.nb_moves;
+		}
+		
+		public int getWidth() {
+			return this.width;
+		}
 
-    public int getHeight() {
-      return this.height;
-    }
+		public int getHeight() {
+			return this.height;
+		}
 
 		public EmptyTile getEmptyTile() {
 			return this.empty_tile;
@@ -73,11 +78,21 @@ public class Board {
 		public void randomMove() {
 			Random gen = new Random();
 			ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
-			tab.remove(this.memory);
-			this.memory=tab.get(gen.nextInt(tab.size()));
-			this.move(this.memory);
-      //System.out.println("Après move:\n"+this);
-      //System.out.println("Pos case vide: ("+this.getEmptyTile().getX()+","+this.getEmptyTile().getY()+")");
+			//tab.remove(this.memory);
+			Direction nextMove = tab.get(gen.nextInt(tab.size()));
+			// ArrayList<Integer> newMove = nextMove.getCoords();
+			// newMove.set(0,-(newMove.get(0)));
+			// newMove.set(1,-(newMove.get(0)));
+			// if (newMove.get(0)==0 && newMove.get(1)==1) {
+			// 	this.memory=Direction.DOWN;
+			// } else if (newMove.get(0)==0 && newMove.get(1)==-1) {
+			// 	this.memory=Direction.UP;
+			// } else if (newMove.get(0)==1 && newMove.get(1)==0) {
+			// 	this.memory=Direction.RIGHT;
+			// } else if (newMove.get(0)==-1 && newMove.get(1)==0) {
+			// 	this.memory=Direction.LEFT;
+			// }
+			this.move(nextMove);
 		}
 
 		public void shuffle(int nb_iter) {
@@ -93,6 +108,7 @@ public class Board {
 				this.move(Direction.RIGHT);
 				tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
 			}
+			this.nb_moves=0;
 		}
 
 		public boolean isSolved() {
@@ -107,13 +123,9 @@ public class Board {
 		}
 
 		public void solve() {
-			int nb_moves=0;
 			while (!(this.isSolved())) {
 					this.randomMove();
-					nb_moves+=1;
-					System.out.println(this);
 			}
-			System.out.println("résolu en " + nb_moves + " coups");
 		}
 
 		public void move(Direction d){
@@ -121,13 +133,14 @@ public class Board {
 			int dest_y=this.empty_tile.getY()+d.getCoords().get(1);
 			if (dest_x>=0 && dest_x<this.width){
 				if (dest_y>=0 && dest_y<this.height){
+					this.nb_moves++;
 					int xp=this.empty_tile.getX();
 					int yp=this.empty_tile.getY();
 					Tile tmp = new FullTile(xp,yp,((FullTile)this.grid[dest_x][dest_y]).getId());
 					this.grid[dest_x][dest_y]=this.grid[this.empty_tile.getX()][this.empty_tile.getY()];
 					this.grid[this.empty_tile.getX()][this.empty_tile.getY()]=tmp;
-          this.empty_tile.setX(dest_x);
-          this.empty_tile.setY(dest_y);
+					this.empty_tile.setX(dest_x);
+					this.empty_tile.setY(dest_y);
 					}
 				}
 			}

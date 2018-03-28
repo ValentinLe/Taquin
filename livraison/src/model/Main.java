@@ -9,7 +9,6 @@ public class Main {
 		Board mystic_square= new Board(3,3);
 		mystic_square.createGrid();
 		mystic_square.shuffle(10000);
-		System.out.println(mystic_square);
 		while (!(mystic_square.isSolved())) {
 			Scanner sc= new Scanner(System.in);
 			EmptyTile empty = mystic_square.getEmptyTile();

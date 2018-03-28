@@ -33,6 +33,25 @@ public class Board {
 				l.add(this.y);
 				return l;
 			}
+
+			public Direction opposite() {
+				Direction res= UP;
+				switch (this) {
+					case UP:
+						res=DOWN;
+						break;
+					case LEFT:
+						res=RIGHT;
+						break;
+					case DOWN:
+						res=UP;
+						break;
+					case RIGHT:
+						res=LEFT;
+						break;
+				}
+				return res;
+			}
 		}
 
 		public Board(int width, int height) {
@@ -44,7 +63,7 @@ public class Board {
 		public int getMoveCount() {
 			return this.nb_moves;
 		}
-		
+
 		public int getWidth() {
 			return this.width;
 		}
@@ -78,20 +97,9 @@ public class Board {
 		public void randomMove() {
 			Random gen = new Random();
 			ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
-			//tab.remove(this.memory);
+			tab.remove(this.memory);
 			Direction nextMove = tab.get(gen.nextInt(tab.size()));
-			// ArrayList<Integer> newMove = nextMove.getCoords();
-			// newMove.set(0,-(newMove.get(0)));
-			// newMove.set(1,-(newMove.get(0)));
-			// if (newMove.get(0)==0 && newMove.get(1)==1) {
-			// 	this.memory=Direction.DOWN;
-			// } else if (newMove.get(0)==0 && newMove.get(1)==-1) {
-			// 	this.memory=Direction.UP;
-			// } else if (newMove.get(0)==1 && newMove.get(1)==0) {
-			// 	this.memory=Direction.RIGHT;
-			// } else if (newMove.get(0)==-1 && newMove.get(1)==0) {
-			// 	this.memory=Direction.LEFT;
-			// }
+			this.memory=nextMove.opposite();
 			this.move(nextMove);
 		}
 

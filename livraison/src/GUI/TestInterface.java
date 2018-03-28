@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.image.*;
 import javax.imageio.*;
 import java.io.*;
+import java.util.*;
 
 public class TestInterface extends JFrame {
 
@@ -20,9 +21,12 @@ public class TestInterface extends JFrame {
       System.out.println(e);
     }
 
+    HashMap hmap = new HashMap();
+
     for (int i = 0; i < 9; i++) {
       BufferedImage newv = this.image.getSubimage(i*50,i*50,200,200);
-      this.add(new JLabel(new ImageIcon(newv)));
+      JLabel im_lab = new JLabel(new ImageIcon(newv));
+      hmap.put(i*50,im_lab);
     }
 
     this.pack();

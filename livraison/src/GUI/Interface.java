@@ -5,6 +5,7 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import model.*;
 
 public class Interface extends JFrame {
@@ -15,6 +16,7 @@ public class Interface extends JFrame {
 
     public Interface(Board b) {
         this.b = b;
+        this.b.shuffle(100);
         this.tuileSize = 200;
         this.setTitle("Taquin");
         this.setResizable(false);
@@ -22,7 +24,7 @@ public class Interface extends JFrame {
         this.game = new View(this.b,this.tuileSize);
         game.setPreferredSize(new Dimension(this.b.getWidth()*this.tuileSize+1,this.b.getHeight()*this.tuileSize+1));
         game.setBackground(Color.black);
-        JLabel counter = new JLabel("Nombre de coups : ");
+        JLabel counter = new JLabel("Nombre de coups : " + this.b.getMoveCount());
         counter.setBackground(Color.green);
 
         this.setLayout(new GridBagLayout());
@@ -36,18 +38,33 @@ public class Interface extends JFrame {
         addKeyListener(new KeyListener(){
            @Override
            public void keyPressed(KeyEvent e) {
-               if (e.getKeyCode() == KeyEvent.VK_UP) {
-                   System.out.println("haut");
-               }
-               if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                   System.out.println("bas");
-               }
-               if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                   System.out.println("gauche");
-               }
-               if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                   System.out.println("droit");
-               }
+               if (!Interface.this.b.isSolved()) {
+                    if (e.getKeyCode() == KeyEvent.VK_UP) {
+                        Interface.this.b.move(Board.Direction.UP);
+                        Interface.this.game.updateUI();
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                        Interface.this.b.move(Board.Direction.DOWN);
+                        Interface.this.game.updateUI();
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                        Interface.this.b.move(Board.Direction.LEFT);
+                        Interface.this.game.updateUI();
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                        Interface.this.b.move(Board.Direction.RIGHT);
+                        Interface.this.game.updateUI();
+                    }
+                }
+               if (Interface.this.b.isSolved()) {
+                        int askRestart = JOptionPane.showConfirmDialog (null, "Do you want to restart ?","End",JOptionPane.YES_NO_OPTION);
+                        if (askRestart == JOptionPane.YES_OPTION) {
+                            Interface.this.b.shuffle(10);
+                        } else {
+                            Interface.this.dispose();
+                        }
+                    }
+               
            }
 
             @Override
@@ -73,7 +90,28 @@ public class Interface extends JFrame {
                 int y = e.getY();
                 x = Math.round(x/Interface.this.tuileSize);
                 y = Math.round(y/Interface.this.tuileSize);
-                System.out.println(x + " " + y);
+                Tile[][] grid = Interface.this.b.getGrid();
+                if (grid[y][x] instanceof FullTile) {
+                    ArrayList<Board.Direction> listNeighbours = Interface.this.b.neighbours(x,y);
+                    EmptyTile empty = Interface.this.b.getEmptyTile();
+                    int emptyX = empty.getX();
+                    int emptyY = empty.getY();
+                    ArrayList<Integer> coordEmpty = new ArrayList<>();
+                    coordEmpty.add(y-emptyY);
+                    coordEmpty.add(x-emptyX);
+                    for (Board.Direction dir : listNeighbours) {
+                        if (dir.getCoords().equals(coordEmpty)) {
+                            System.out.println(y + " " + x);
+                            System.out.println(emptyY + " " + emptyX);
+                            System.out.println("" + (y-emptyY) + " " + (x-emptyX));
+                            System.out.println("" + dir.getCoords());
+                            Interface.this.b.move(dir);
+                            Interface.this.game.updateUI();
+                        }
+                    }
+                    System.out.println("\n\n");
+                    System.out.println(y + " " + x);
+                }
             }
 
             @Override

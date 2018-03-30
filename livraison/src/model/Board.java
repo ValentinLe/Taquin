@@ -13,10 +13,10 @@ public class Board {
 		private int nb_moves;
 
 		public enum Direction {
-			UP (-1,0),
-			LEFT (0,-1),
-			DOWN (1,0),
-			RIGHT (0,1);
+			UP (0,-1),
+			LEFT (-1,0),
+			DOWN (0,1),
+			RIGHT (1,0);
 
 			private final int x;
 			private final int y;
@@ -155,17 +155,17 @@ public class Board {
 
 			public ArrayList<Direction> neighbours(int x, int y) {
 				ArrayList<Direction> listCoord = new ArrayList<>();
-				if (y < this.height -1) {
-					listCoord.add(Direction.RIGHT);
-				}
-				if (y > 0) {
-					listCoord.add(Direction.LEFT);
-				}
-				if (x < this.width -1) {
+				if (y < this.height - 1) {
 					listCoord.add(Direction.DOWN);
 				}
-				if (x > 0) {
+				if (y > 0) {
 					listCoord.add(Direction.UP);
+				}
+				if (x < this.width - 1) {
+					listCoord.add(Direction.RIGHT);
+				}
+				if (x > 0) {
+					listCoord.add(Direction.LEFT);
 				}
 				return listCoord;
 			}

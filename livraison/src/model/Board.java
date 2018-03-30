@@ -81,14 +81,14 @@ public class Board {
 		}
 
 		public void createGrid() {
-			this.grid=new Tile[this.width][this.height];
-			for (int i=0; i<this.width;i++){
-				for (int j=0; j<this.height;j++){
+			this.grid=new Tile[this.height][this.width];
+			for (int j=0; j<this.height;j++){
+				for (int i=0; i<this.width;i++){
 					if (i*j<(this.width-1)*(this.height-1)){
-						this.grid[i][j]=new FullTile(i,j,i*this.width+j);
+						this.grid[j][i]=new FullTile(i,j,j*this.width+i);
 					} else {
 						this.empty_tile=new EmptyTile(i,j);
-						this.grid[i][j]=this.empty_tile;
+						this.grid[j][i]=this.empty_tile;
 					}
 				}
 			}
@@ -120,9 +120,9 @@ public class Board {
 		}
 
 		public boolean isSolved() {
-			for (int i=0; i<this.width;i++) {
-				for (int j=0; j<this.height;j++) {
-					if (this.grid[i][j] instanceof FullTile && ((FullTile)this.grid[i][j]).getId()!=i*this.width+j) {
+			for (int j=0; j<this.height;j++) {
+				for (int i=0; i<this.width;i++) {
+					if (this.grid[j][i] instanceof FullTile && ((FullTile)this.grid[j][i]).getId()!=j*this.width+i) {
 						return false;
 					}
 				}
@@ -144,9 +144,9 @@ public class Board {
 					this.nb_moves++;
 					int xp=this.empty_tile.getX();
 					int yp=this.empty_tile.getY();
-					Tile tmp = new FullTile(xp,yp,((FullTile)this.grid[dest_x][dest_y]).getId());
-					this.grid[dest_x][dest_y]=this.grid[this.empty_tile.getX()][this.empty_tile.getY()];
-					this.grid[this.empty_tile.getX()][this.empty_tile.getY()]=tmp;
+					Tile tmp = new FullTile(xp,yp,((FullTile)this.grid[dest_y][dest_x]).getId());
+					this.grid[dest_y][dest_x]=this.grid[this.empty_tile.getY()][this.empty_tile.getX()];
+					this.grid[this.empty_tile.getY()][this.empty_tile.getX()]=tmp;
 					this.empty_tile.setX(dest_x);
 					this.empty_tile.setY(dest_y);
 					}
@@ -172,9 +172,9 @@ public class Board {
 
 		public String toString() {
 			String ch="";
-			for (int i=0; i<this.width;i++){
-				for (int j=0; j<this.height;j++) {
-					ch+=this.grid[i][j].toString() + " ";
+			for (int j=0; j<this.height;j++) {
+				for (int i=0; i<this.width;i++){
+					ch+=this.grid[j][i].toString() + " ";
 				}
 					ch+="\n";
 			}

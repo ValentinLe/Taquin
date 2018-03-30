@@ -15,7 +15,7 @@ public class View extends JPanel implements ModelListener {
         this.model = model;
         this.tuileSize = tuileSize;
     }
-    
+
     public void setPosition(int newX, int newY) {
         this.x = newX;
         this.y = newY;
@@ -31,8 +31,8 @@ public class View extends JPanel implements ModelListener {
 
         g.setFont(new Font("Monospace", Font.BOLD, 50));
 
-        for (int i = 0; i < this.model.getWidth(); i++) {
-            for (int j = 0; j < this.model.getHeight(); j++) {
+        for (int j = 0; j < this.model.getHeight(); j++) {
+          for (int i = 0; i < this.model.getWidth(); i++) {
                 if (grid[j][i] instanceof FullTile) {
                     if (i == this.x && j == this.y) {
                         g.setColor(Color.pink);

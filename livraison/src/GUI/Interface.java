@@ -64,7 +64,7 @@ public class Interface extends JFrame {
                             Interface.this.dispose();
                         }
                     }
-               
+
            }
 
             @Override
@@ -92,25 +92,19 @@ public class Interface extends JFrame {
                 y = Math.round(y/Interface.this.tuileSize);
                 Tile[][] grid = Interface.this.b.getGrid();
                 if (grid[y][x] instanceof FullTile) {
-                    ArrayList<Board.Direction> listNeighbours = Interface.this.b.neighbours(x,y);
                     EmptyTile empty = Interface.this.b.getEmptyTile();
                     int emptyX = empty.getX();
                     int emptyY = empty.getY();
+                    ArrayList<Board.Direction> listNeighbours = Interface.this.b.neighbours(emptyX,emptyY);
                     ArrayList<Integer> coordEmpty = new ArrayList<>();
-                    coordEmpty.add(y-emptyY);
                     coordEmpty.add(x-emptyX);
+                    coordEmpty.add(y-emptyY);
                     for (Board.Direction dir : listNeighbours) {
                         if (dir.getCoords().equals(coordEmpty)) {
-                            System.out.println(y + " " + x);
-                            System.out.println(emptyY + " " + emptyX);
-                            System.out.println("" + (y-emptyY) + " " + (x-emptyX));
-                            System.out.println("" + dir.getCoords());
                             Interface.this.b.move(dir);
                             Interface.this.game.updateUI();
+                          }
                         }
-                    }
-                    System.out.println("\n\n");
-                    System.out.println(y + " " + x);
                 }
             }
 

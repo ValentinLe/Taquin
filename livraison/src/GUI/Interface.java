@@ -12,6 +12,7 @@ public class Interface extends JFrame {
 
     private Board b;
     private View game;
+    private JLabel counter;
     private int tuileSize;
 
     public Interface(Board b) {
@@ -24,7 +25,7 @@ public class Interface extends JFrame {
         this.game = new View(this.b,this.tuileSize);
         game.setPreferredSize(new Dimension(this.b.getWidth()*this.tuileSize+1,this.b.getHeight()*this.tuileSize+1));
         game.setBackground(Color.black);
-        JLabel counter = new JLabel("Nombre de coups : " + this.b.getMoveCount());
+        this.counter = new JLabel("Nombre de coups : " + this.b.getMoveCount());
         counter.setBackground(Color.green);
 
         this.setLayout(new GridBagLayout());
@@ -41,20 +42,18 @@ public class Interface extends JFrame {
                if (!Interface.this.b.isSolved()) {
                     if (e.getKeyCode() == KeyEvent.VK_UP) {
                         Interface.this.b.move(Board.Direction.UP);
-                        Interface.this.game.updateUI();
                     }
                     if (e.getKeyCode() == KeyEvent.VK_DOWN) {
                         Interface.this.b.move(Board.Direction.DOWN);
-                        Interface.this.game.updateUI();
                     }
                     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                         Interface.this.b.move(Board.Direction.LEFT);
-                        Interface.this.game.updateUI();
                     }
                     if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                         Interface.this.b.move(Board.Direction.RIGHT);
-                        Interface.this.game.updateUI();
                     }
+                    Interface.this.game.updateUI();
+                    Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
                 }
                if (Interface.this.b.isSolved()) {
                         int askRestart = JOptionPane.showConfirmDialog (null, "Do you want to restart ?","End",JOptionPane.YES_NO_OPTION);
@@ -103,6 +102,7 @@ public class Interface extends JFrame {
                         if (dir.getCoords().equals(coordEmpty)) {
                             Interface.this.b.move(dir);
                             Interface.this.game.updateUI();
+                            Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
                           }
                         }
                 }
@@ -148,6 +148,4 @@ public class Interface extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
-
-
 }

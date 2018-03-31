@@ -35,7 +35,7 @@ public class View extends JPanel implements ModelListener {
           for (int i = 0; i < this.model.getWidth(); i++) {
                 if (grid[j][i] instanceof FullTile) {
                     if (i == this.x && j == this.y) {
-                        g.setColor(Color.pink);
+                        g.setColor(Color.orange);
                     } else {
                         g.setColor(Color.white);
                     }

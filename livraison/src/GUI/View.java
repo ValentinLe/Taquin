@@ -29,7 +29,7 @@ public class View extends JPanel implements ModelListener {
         int emptyY = this.model.getEmptyTile().getY();
         Tile[][] grid = this.model.getGrid();
 
-        g.setFont(new Font("Monospace", Font.BOLD, 50));
+        g.setFont(new Font("Monospace", Font.BOLD, Math.round(size/4)));
 
         for (int j = 0; j < this.model.getHeight(); j++) {
           for (int i = 0; i < this.model.getWidth(); i++) {

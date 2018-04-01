@@ -10,6 +10,7 @@ import java.util.Date;
 public class Main {
 
 	public static void main(String[] args) {
+		boolean exit = false;
 		long start= System.currentTimeMillis();
 		Board mystic_square= new Board(4,4);
 		mystic_square.shuffle(10000);
@@ -18,7 +19,7 @@ public class Main {
 			EmptyTile empty = mystic_square.getEmptyTile();
 			ArrayList<Board.Direction> possible_moves = mystic_square.neighbours(empty.getX(), empty.getY());
 			System.out.println(mystic_square);
-			System.out.println("Choisissez un déplacement: z, q, s, d        Résolution automatique : r");
+			System.out.println("Choisissez un déplacement: z, q, s, d   Résolution automatique : r   Quitter : e");
 			String selectMove = sc.nextLine();
 
 			if (selectMove.equals("z") && (mystic_square.neighbours(empty.getX(),empty.getY()).contains(Board.Direction.UP))) {
@@ -37,9 +38,15 @@ public class Main {
 				mystic_square.solve();
 				System.out.println(mystic_square);
 			}
+			if (selectMove.equals("e"))  {
+				exit=true;
+				break;
+			}
 		}
+		if (!(exit)) {
 		System.out.println(mystic_square);
 		System.out.println("résolu en " + mystic_square.getMoveCount() + " coups");
 		System.out.println(System.currentTimeMillis()-start);
+		}
 	}
 }

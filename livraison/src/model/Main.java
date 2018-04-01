@@ -2,12 +2,16 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Date;
 
+/**
+	* Version console du taquin.
+*/
 public class Main {
 
 	public static void main(String[] args) {
-		Board mystic_square= new Board(3,3);
-		mystic_square.createGrid();
+		long start= System.currentTimeMillis();
+		Board mystic_square= new Board(4,4);
 		mystic_square.shuffle(10000);
 		while (!(mystic_square.isSolved())) {
 			Scanner sc= new Scanner(System.in);
@@ -31,9 +35,11 @@ public class Main {
 			}
 			if (selectMove.equals("r"))  {
 				mystic_square.solve();
+				System.out.println(mystic_square);
 			}
 		}
 		System.out.println(mystic_square);
 		System.out.println("résolu en " + mystic_square.getMoveCount() + " coups");
+		System.out.println(System.currentTimeMillis()-start);
 	}
 }

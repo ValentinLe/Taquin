@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Main {
 
 	public static void main(String[] args) {
-		Board mystic_square= new Board(4,3);
+		Board mystic_square= new Board(3,3);
 		mystic_square.createGrid();
 		mystic_square.shuffle(10000);
 		while (!(mystic_square.isSolved())) {

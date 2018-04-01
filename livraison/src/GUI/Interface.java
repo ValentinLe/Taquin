@@ -17,7 +17,7 @@ public class Interface extends JFrame {
 
     public Interface(Board b) {
         this.b = b;
-        this.b.shuffle(100);
+        this.b.shuffle(10000);
         this.tuileSize = 200;
         this.setTitle("Taquin");
         this.setResizable(false);
@@ -26,7 +26,6 @@ public class Interface extends JFrame {
         game.setPreferredSize(new Dimension(this.b.getWidth()*this.tuileSize+1,this.b.getHeight()*this.tuileSize+1));
         game.setBackground(Color.black);
         this.counter = new JLabel("Nombre de coups : " + this.b.getMoveCount());
-        counter.setBackground(Color.green);
 
         this.setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
@@ -52,13 +51,13 @@ public class Interface extends JFrame {
                     if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                         Interface.this.b.move(Board.Direction.RIGHT);
                     }
-                    Interface.this.game.updateUI();
+                    Interface.this.game.update(Interface.this.game);
                     Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
                 }
                if (Interface.this.b.isSolved()) {
                         int askRestart = JOptionPane.showConfirmDialog (null, "Do you want to restart ?","End",JOptionPane.YES_NO_OPTION);
                         if (askRestart == JOptionPane.YES_OPTION) {
-                            Interface.this.b.shuffle(10);
+                            Interface.this.b.shuffle(10000);
                         } else {
                             Interface.this.dispose();
                         }
@@ -101,7 +100,7 @@ public class Interface extends JFrame {
                     for (Board.Direction dir : listNeighbours) {
                         if (dir.getCoords().equals(coordEmpty)) {
                             Interface.this.b.move(dir);
-                            Interface.this.game.updateUI();
+                            Interface.this.game.update(Interface.this.game);
                             Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
                           }
                         }
@@ -121,7 +120,7 @@ public class Interface extends JFrame {
             @Override
             public void mouseExited(MouseEvent e) {
               Interface.this.game.setPosition(-1,-1);
-              Interface.this.game.updateUI();
+              Interface.this.game.update(Interface.this.game);
             }
         });
 
@@ -138,7 +137,7 @@ public class Interface extends JFrame {
                 x = Math.round(x/Interface.this.tuileSize);
                 y = Math.round(y/Interface.this.tuileSize);
                 Interface.this.game.setPosition(x,y);
-                Interface.this.game.updateUI();
+                Interface.this.game.update(Interface.this.game);
             }
 
         });

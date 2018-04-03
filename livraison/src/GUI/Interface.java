@@ -55,7 +55,7 @@ public class Interface extends JFrame {
                     Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
                 }
                if (Interface.this.b.isSolved()) {
-                        int askRestart = JOptionPane.showConfirmDialog (null, "Do you want to restart ?","End",JOptionPane.YES_NO_OPTION);
+                        int askRestart = JOptionPane.showConfirmDialog (null, "Voulez-vous recommencer ?","End",JOptionPane.YES_NO_OPTION);
                         if (askRestart == JOptionPane.YES_OPTION) {
                             Interface.this.b.shuffle(10000);
                         } else {

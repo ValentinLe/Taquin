@@ -8,7 +8,7 @@ public class Main {
       Scanner sc= new Scanner(System.in);
       System.out.println("Entrez le chemin d'une image");
       String path = sc.nextLine();
-      Board b = new Board(3,3);
+      Board b = new Board(2,2);
       b.createGrid();
       new Interface(b,path);
     }

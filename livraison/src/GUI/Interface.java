@@ -11,18 +11,18 @@ import model.*;
 public class Interface extends JFrame {
 
     private Board b;
-    private View game;
+    private TestInterface game;
     private JLabel counter;
     private int tuileSize;
 
-    public Interface(Board b) {
+    public Interface(Board b, String path) {
         this.b = b;
         this.b.shuffle(10000);
         this.tuileSize = 200;
         this.setTitle("Taquin");
         this.setResizable(false);
 
-        this.game = new View(this.b,this.tuileSize);
+        this.game = new TestInterface(this.b,this.tuileSize,path);
         game.setPreferredSize(new Dimension(this.b.getWidth()*this.tuileSize+1,this.b.getHeight()*this.tuileSize+1));
         game.setBackground(Color.black);
         this.counter = new JLabel("Nombre de coups : " + this.b.getMoveCount());

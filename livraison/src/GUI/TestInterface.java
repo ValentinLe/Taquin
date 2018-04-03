@@ -1,6 +1,7 @@
 package GUI;
 
 import model.*;
+import java.awt.*;
 import javax.swing.*;
 import java.awt.Image;
 import java.awt.image.*;
@@ -9,38 +10,65 @@ import java.io.*;
 import java.util.*;
 import java.util.ArrayList;
 
-public class TestInterface extends JFrame {
+public class TestInterface extends JPanel implements ModelListener {
 
   private BufferedImage image;
+  private String pathImage;
+  private HashMap<Integer,Image> hmap;
+  private Board model;
+  private int x = -1;
+  private int y = -1;
+  private int tuileSize;
 
-  public TestInterface() {
-    this.setTitle("Taquin");
-    this.setResizable(false);
+  public TestInterface(Board model, int tuileSize,String pathImage) {
+
+    this.model = model;
+    this.pathImage = pathImage;
+    this.tuileSize = tuileSize;
+
     try {
-      File file = new File("test.png");
+      File file = new File(pathImage);
       this.image = ImageIO.read(file);
     } catch (IOException e) {
       System.out.println(e);
     }
 
-    HashMap<ArrayList<Integer>,Image> hmap = new HashMap<>();
-
-    ArrayList<Integer> list = new ArrayList<>();
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 9; j++){
-        BufferedImage newv = this.image.getSubimage(i*50,j*50,200,200);
+    this.hmap = new HashMap<>();
+    for (int j = 0; j < this.model.getHeight(); j++){
+      for (int i = 0; i < this.model.getWidth(); i++) {
+        BufferedImage newv = this.image.getSubimage(i*200,j*200,200,200);
         Image im_lab = new ImageIcon(newv).getImage();
-        list.add(i);
-        list.add(j);
-        hmap.put(list,im_lab);
+        this.hmap.put(j*this.model.getWidth() + i,im_lab);
       }
     }
-    
+  }
 
+  public void setPosition(int newX, int newY) {
+      this.x = newX;
+      this.y = newY;
+  }
 
-    this.pack();
-    this.setLocationRelativeTo(null);
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setVisible(true);
+  @Override
+  public void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      int size = this.tuileSize;
+      int emptyX = this.model.getEmptyTile().getX();
+      int emptyY = this.model.getEmptyTile().getY();
+      Tile[][] grid = this.model.getGrid();
+
+      for (int j = 0; j < this.model.getHeight(); j++) {
+        for (int i = 0; i < this.model.getWidth(); i++) {
+              if (grid[j][i] instanceof FullTile) {
+                Image im = this.hmap.get(((FullTile)grid[j][i]).getId());
+                g.drawImage(im,size*i, size*j,size, size, this);
+                g.drawRect(size*i, size*j,size, size);
+              }
+          }
+      }
+  }
+
+  @Override
+  public void update(Object src) {
+      repaint();
   }
 }

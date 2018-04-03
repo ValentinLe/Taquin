@@ -2,10 +2,12 @@ package GUI;
 
 import model.*;
 import javax.swing.*;
+import java.awt.Image;
 import java.awt.image.*;
 import javax.imageio.*;
 import java.io.*;
 import java.util.*;
+import java.util.ArrayList;
 
 public class TestInterface extends JFrame {
 
@@ -21,13 +23,20 @@ public class TestInterface extends JFrame {
       System.out.println(e);
     }
 
-    HashMap hmap = new HashMap();
+    HashMap<ArrayList<Integer>,Image> hmap = new HashMap<>();
 
+    ArrayList<Integer> list = new ArrayList<>();
     for (int i = 0; i < 9; i++) {
-      BufferedImage newv = this.image.getSubimage(i*50,i*50,200,200);
-      JLabel im_lab = new JLabel(new ImageIcon(newv));
-      hmap.put(i*50,im_lab);
+      for (int j = 0; j < 9; j++){
+        BufferedImage newv = this.image.getSubimage(i*50,j*50,200,200);
+        Image im_lab = new ImageIcon(newv).getImage();
+        list.add(i);
+        list.add(j);
+        hmap.put(list,im_lab);
+      }
     }
+    
+
 
     this.pack();
     this.setLocationRelativeTo(null);

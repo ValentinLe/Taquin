@@ -7,23 +7,24 @@ import java.awt.event.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import model.*;
+import java.util.Scanner;
+import java.io.*;
 
 public class Interface extends JFrame {
 
     private Board b;
-    private TestInterface game;
+    private View game;
     private JLabel counter;
-    private int tuileSize;
+    private int tileSize;
 
     public Interface(Board b, String path) {
         this.b = b;
         this.b.shuffle(10000);
-        this.tuileSize = 200;
+        this.tileSize = 200;
         this.setTitle("Taquin");
         this.setResizable(false);
-
-        this.game = new TestInterface(this.b,this.tuileSize,path);
-        game.setPreferredSize(new Dimension(this.b.getWidth()*this.tuileSize+1,this.b.getHeight()*this.tuileSize+1));
+        this.game = new View(this.b,this.tileSize,path);
+        game.setPreferredSize(new Dimension(this.b.getWidth()*this.tileSize+1,this.b.getHeight()*this.tileSize+1));
         game.setBackground(Color.black);
         this.counter = new JLabel("Nombre de coups : " + this.b.getMoveCount());
 
@@ -86,8 +87,8 @@ public class Interface extends JFrame {
             public void mousePressed(MouseEvent e) {
                 int x = e.getX();
                 int y = e.getY();
-                x = Math.round(x/Interface.this.tuileSize);
-                y = Math.round(y/Interface.this.tuileSize);
+                x = Math.round(x/Interface.this.tileSize);
+                y = Math.round(y/Interface.this.tileSize);
                 Tile[][] grid = Interface.this.b.getGrid();
                 if (grid[y][x] instanceof FullTile) {
                     EmptyTile empty = Interface.this.b.getEmptyTile();
@@ -134,8 +135,8 @@ public class Interface extends JFrame {
             public void mouseMoved(MouseEvent e) {
                 int x = e.getX();
                 int y = e.getY();
-                x = Math.round(x/Interface.this.tuileSize);
-                y = Math.round(y/Interface.this.tuileSize);
+                x = Math.round(x/Interface.this.tileSize);
+                y = Math.round(y/Interface.this.tileSize);
                 Interface.this.game.setPosition(x,y);
                 Interface.this.game.update(Interface.this.game);
             }

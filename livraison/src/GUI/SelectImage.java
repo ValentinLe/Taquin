@@ -24,6 +24,9 @@ public class SelectImage extends JFrame {
   private String[] images;
   private int nbImages;
 
+  /**
+    * Constructeur de la classe
+    */
   public SelectImage () {
 
     this.setResizable(true);
@@ -34,6 +37,7 @@ public class SelectImage extends JFrame {
 
     this.setPathAndImage();
 
+    // les boutons
     JPanel zoneButton = new JPanel ();
 
     JButton bPlay = new JButton("Jouer");
@@ -60,6 +64,7 @@ public class SelectImage extends JFrame {
     zoneButton.add(bQuit);
     zoneButton.setLayout(new GridLayout(2,1,10,10));
 
+    // la liste d'image
     Vector<String> vect = new Vector<>();
     for (String im : this.images) {
       vect.add(im.split("\\.")[0]);
@@ -83,14 +88,10 @@ public class SelectImage extends JFrame {
     });
 
     JPanel listImage = new JPanel();
-    listImage.setLayout(new GridBagLayout());
-    GridBagConstraints cList = new GridBagConstraints();
-    cList.gridx = 0;
-    cList.gridy = 0;
     scrollPane.setPreferredSize(new Dimension(100,300));
-    listImage.add(scrollPane,cList);
-    cList.gridy = 1;
+    listImage.add(scrollPane);
 
+    // affichage de l'image
     JPanel visual = new JPanel() {
       @Override
       public void paintComponent(Graphics g) {
@@ -99,6 +100,7 @@ public class SelectImage extends JFrame {
     };
     visual.setPreferredSize(new Dimension(500,250));
 
+    // gestion du positionnement de la frame
     this.setLayout(new GridBagLayout());
     GridBagConstraints gc = new GridBagConstraints();
     gc.fill = GridBagConstraints.HORIZONTAL;
@@ -111,6 +113,7 @@ public class SelectImage extends JFrame {
     gc.gridx = 2;
     this.add(visual,gc);
 
+    // parametres de la frame
     pack();
 
     this.setLocationRelativeTo(null);
@@ -119,6 +122,9 @@ public class SelectImage extends JFrame {
 
   }
 
+  /**
+    * Modifie le chemin de l'image en fonction de l'element séléctionné de la liste et lit l'image selon ce chemin
+    */
   public void setPathAndImage() {
     this.path = "ressources/" + this.images[this.indice];
     try {

@@ -10,6 +10,9 @@ import java.io.*;
 import java.util.*;
 import java.util.ArrayList;
 
+/**
+  * Classe représentant la zone jouable
+  */
 public class View extends JPanel implements ModelListener {
 
   private BufferedImage image;
@@ -21,12 +24,20 @@ public class View extends JPanel implements ModelListener {
   private int tileSize;
   private int imageSize;
 
+  /**
+    * Constructeur de la Classe
+    * @param model l'état de jeu
+    * @param tileSize taille des cases en pixels
+    * @param pathImage chemin de l'image à dessiner en fond
+    */
   public View(Board model, int tileSize,String pathImage) {
 
     this.model = model;
     this.model.addListener(this);
+    this.tileSize = tileSize;
     this.pathImage = pathImage;
 
+    // chargement de l'image
     try {
       File file = new File(pathImage);
       this.image = ImageIO.read(file);
@@ -34,8 +45,8 @@ public class View extends JPanel implements ModelListener {
       e.printStackTrace();
     }
 
+    // cration du mappage de l'image
     this.hmap = new HashMap<>();
-    this.tileSize = 200;
     this.imageSize = findImageSize(this.image);
 
     for (int j = 0; j < this.model.getHeight(); j++){
@@ -45,14 +56,20 @@ public class View extends JPanel implements ModelListener {
         this.hmap.put(j*this.model.getWidth() + i,im_lab);
       }
     }
-
+    // FIN CONSTRUCTEUR
   }
 
+  /**
+    * Modifie les positions x et y qui correspond aux coordonnées de la souris en cases
+    */
   public void setPosition(int newX, int newY) {
       this.x = newX;
       this.y = newY;
   }
 
+  /**
+    * Trouve la bonne dimension pour découper l'image en prenant le minimum entre la hauteur et la largeur
+    */
   public int findImageSize(BufferedImage im) {
     int width = im.getWidth();
     int height = im.getHeight();
@@ -63,6 +80,10 @@ public class View extends JPanel implements ModelListener {
     return Math.round(Math.min(lenX,lenY));
   }
 
+  /**
+    * Dessine le visuel du jeu
+    * @param g le graphique de JPanel
+    */
   @Override
   public void paintComponent(Graphics g) {
       super.paintComponent(g);
@@ -78,6 +99,12 @@ public class View extends JPanel implements ModelListener {
                 Image im = this.hmap.get(((FullTile)grid[j][i]).getId());
                 g.drawImage(im,size*i, size*j,size, size, this);
                 if (!solved) {
+                  if (this.x == i && this.y == j) {
+                    Color couleurHover = new Color(255,255,255,30);
+                    g.setColor(couleurHover);
+                    g.fillRect(size*i, size*j,size, size);
+                  }
+                  g.setColor(Color.black);
                   g.drawRect(size*i, size*j,size, size);
                 }
               } else {
@@ -90,6 +117,9 @@ public class View extends JPanel implements ModelListener {
       }
   }
 
+  /**
+    * Actualise la vue
+    */
   @Override
   public void update(Object src) {
       repaint();

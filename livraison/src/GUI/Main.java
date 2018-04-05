@@ -1,11 +1,11 @@
 package GUI;
 
 import model.*;
+import java.awt.*;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Board b = new Board(3,3);
-        b.createGrid();
-        new Interface(b);
+      new SelectImage();
     }
 }

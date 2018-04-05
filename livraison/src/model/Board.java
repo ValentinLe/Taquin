@@ -2,11 +2,12 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Random;
+import GUI.AbstractModeleEcoutable;
 
 /**
 	* Représentation du plateau de jeu.
 	*/
-public class Board {
+public class Board extends AbstractModeleEcoutable {
 
 		private int width;
 		private int height;
@@ -213,6 +214,7 @@ public class Board {
 					this.grid[this.empty_tile.getY()][this.empty_tile.getX()]=tmp;
 					this.empty_tile.setX(dest_x);
 					this.empty_tile.setY(dest_y);
+					fireChange();
 					}
 				}
 			}

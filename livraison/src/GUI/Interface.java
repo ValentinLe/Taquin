@@ -23,6 +23,7 @@ public class Interface extends JFrame {
         this.tileSize = 200;
         this.setTitle("Taquin");
         this.setResizable(false);
+
         this.game = new View(this.b,this.tileSize,path);
         game.setPreferredSize(new Dimension(this.b.getWidth()*this.tileSize+1,this.b.getHeight()*this.tileSize+1));
         game.setBackground(Color.black);
@@ -52,11 +53,10 @@ public class Interface extends JFrame {
                     if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                         Interface.this.b.move(Board.Direction.RIGHT);
                     }
-                    Interface.this.game.update(Interface.this.game);
                     Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
                 }
                if (Interface.this.b.isSolved()) {
-                        int askRestart = JOptionPane.showConfirmDialog (null, "Voulez-vous recommencer ?","End",JOptionPane.YES_NO_OPTION);
+                        int askRestart = JOptionPane.showConfirmDialog (null, "Voulez-vous recommencer ?","Fin de la partie",JOptionPane.YES_NO_OPTION);
                         if (askRestart == JOptionPane.YES_OPTION) {
                             Interface.this.b.shuffle(10000);
                         } else {
@@ -101,7 +101,6 @@ public class Interface extends JFrame {
                     for (Board.Direction dir : listNeighbours) {
                         if (dir.getCoords().equals(coordEmpty)) {
                             Interface.this.b.move(dir);
-                            Interface.this.game.update(Interface.this.game);
                             Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
                           }
                         }

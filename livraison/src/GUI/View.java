@@ -24,6 +24,7 @@ public class View extends JPanel implements ModelListener {
   public View(Board model, int tileSize,String pathImage) {
 
     this.model = model;
+    this.model.addListener(this);
     this.pathImage = pathImage;
 
     try {
@@ -76,6 +77,12 @@ public class View extends JPanel implements ModelListener {
                 Image im = this.hmap.get(((FullTile)grid[j][i]).getId());
                 g.drawImage(im,size*i, size*j,size, size, this);
                 g.drawRect(size*i, size*j,size, size);
+              } else {
+                if (this.model.isSolved()) {
+                  Image im = this.hmap.get(j*this.model.getWidth() + i);
+                  g.drawImage(im,size*i, size*j,size, size, this);
+                  g.drawRect(size*i, size*j,size, size);
+                }
               }
           }
       }

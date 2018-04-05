@@ -69,19 +69,7 @@ public class Interface extends JFrame {
                 }
                if (Interface.this.b.isSolved()) {
                         // message de fin
-                        Interface.this.timer = new Timer(1000,new ActionListener () {
-                          public void actionPerformed(ActionEvent e) {
-                            int askRestart = JOptionPane.showConfirmDialog (null, "Voulez-vous recommencer ?","Fin de la partie",JOptionPane.YES_NO_OPTION);
-                            if (askRestart == JOptionPane.YES_OPTION) {
-                                Interface.this.b.shuffle(10000);
-                            } else {
-                                Interface.this.dispose();
-                            }
-                            Interface.this.timer.stop();
-                          }
-                        });
-
-                      timer.start();
+                        endGame();
                 }
            }
 
@@ -123,6 +111,10 @@ public class Interface extends JFrame {
                             Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
                           }
                         }
+                        if (Interface.this.b.isSolved()) {
+                                 // message de fin
+                                 endGame();
+                         }
                 }
             }
 
@@ -166,5 +158,24 @@ public class Interface extends JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
+    }
+
+    /**
+      * Ouvre une pop-up pour demander si le joueur veut recommencer une partie
+      */
+    public void endGame() {
+      this.timer = new Timer(1000,new ActionListener () {
+        public void actionPerformed(ActionEvent e) {
+          int askRestart = JOptionPane.showConfirmDialog (null, "Voulez-vous recommencer ?","Fin de la partie",JOptionPane.YES_NO_OPTION);
+          if (askRestart == JOptionPane.YES_OPTION) {
+              Interface.this.b.shuffle(10000);
+          } else {
+              Interface.this.dispose();
+          }
+          Interface.this.timer.stop();
+        }
+      });
+
+      timer.start();
     }
 }

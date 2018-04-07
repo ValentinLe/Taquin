@@ -30,7 +30,7 @@ public class SelectImage extends JFrame {
   public SelectImage () {
 
     this.setResizable(true);
-    this.setTitle("Select map");
+    this.setTitle("Select image");
     this.indice = 0;
     this.images = new File("ressources").list();
     this.nbImages = images.length;

@@ -37,26 +37,9 @@ public class View extends JPanel implements ModelListener {
     this.tileSize = tileSize;
     this.pathImage = pathImage;
 
-    // chargement de l'image
-    try {
-      File file = new File(pathImage);
-      this.image = ImageIO.read(file);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    setImage(this.pathImage);
 
-    // cration du mappage de l'image
-    this.hmap = new HashMap<>();
-    this.imageSize = findImageSize(this.image);
-
-    for (int j = 0; j < this.model.getHeight(); j++){
-      for (int i = 0; i < this.model.getWidth(); i++) {
-        BufferedImage newv = this.image.getSubimage(i*this.imageSize,j*this.imageSize,this.imageSize,this.imageSize);
-        Image im_lab = new ImageIcon(newv).getImage();
-        this.hmap.put(j*this.model.getWidth() + i,im_lab);
-      }
-    }
-    // FIN CONSTRUCTEUR
+    createHashMap();
   }
 
   /**
@@ -78,6 +61,28 @@ public class View extends JPanel implements ModelListener {
     float lenX = width/x;
     float lenY = height/y;
     return Math.round(Math.min(lenX,lenY));
+  }
+
+  public void setImage(String newPath) {
+    try {
+      File file = new File(newPath);
+      this.image = ImageIO.read(file);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void createHashMap() {
+    this.hmap = new HashMap<>();
+    this.imageSize = findImageSize(this.image);
+
+    for (int j = 0; j < this.model.getHeight(); j++){
+      for (int i = 0; i < this.model.getWidth(); i++) {
+        BufferedImage newv = this.image.getSubimage(i*this.imageSize,j*this.imageSize,this.imageSize,this.imageSize);
+        Image im_lab = new ImageIcon(newv).getImage();
+        this.hmap.put(j*this.model.getWidth() + i,im_lab);
+      }
+    }
   }
 
   /**

@@ -15,6 +15,7 @@ public class Board extends AbstractModeleEcoutable {
 		private EmptyTile empty_tile;
 		private Direction memory;
 		private int nb_moves;
+		private boolean solving;
 
 		/**
 		* Enum symbolisant la direction de déplacement d'une case.
@@ -77,6 +78,7 @@ public class Board extends AbstractModeleEcoutable {
 		public Board(int width, int height) {
 				this.width = width;
 				this.height = height;
+				this.solving = false;
 				this.createGrid();
 				this.memory = Direction.DOWN;
 		}
@@ -103,6 +105,14 @@ public class Board extends AbstractModeleEcoutable {
 		*/
 		public int getHeight() {
 			return this.height;
+		}
+
+		/**
+			* Accesseur du booleen qui permet de savoir si le jeu est en résolution.
+			* @return L'attribut solving.
+		*/
+		public boolean getSolving() {
+			return this.solving;
 		}
 
 		/**
@@ -192,9 +202,11 @@ public class Board extends AbstractModeleEcoutable {
 			* Résout le puzzle de façon aléatoire.
 		*/
 		public void solve() {
+			this.solving = true;
 			while (!(this.isSolved())) {
 					this.randomMove();
 			}
+			this.solving = false;
 		}
 
 		/**

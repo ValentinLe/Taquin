@@ -37,22 +37,53 @@ public class Interface extends JFrame {
         this.game = new View(this.b,this.tileSize,path);
         game.setPreferredSize(new Dimension(this.b.getWidth()*this.tileSize+1,this.b.getHeight()*this.tileSize+1));
         game.setBackground(Color.black);
+        JPanel zoneBot = new JPanel();
+
+        JButton bRestart = new JButton("Recommencer");
+        bRestart.setFocusable(false);
+        bRestart.addActionListener(new ActionListener () {
+          @Override
+          public void actionPerformed(ActionEvent e){
+            if (!Interface.this.b.getSolving()) {
+              Interface.this.b.createGrid();
+              Interface.this.b.shuffle(10000);
+              Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
+              Interface.this.counter.updateUI();
+            }
+          }
+        });
+
         this.counter = new JLabel("Nombre de coups : " + this.b.getMoveCount());
 
+        JButton bSolve = new JButton("Resolution");
+        bSolve.setFocusable(false);
+        bSolve.addActionListener(new ActionListener () {
+          @Override
+          public void actionPerformed(ActionEvent e){
+            Interface.this.b.solve();
+            Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
+            Interface.this.counter.updateUI();
+          }
+        });
+
         // gestion du placement des éléments
+        zoneBot.setLayout(new GridLayout(1,3,20,20));
+        zoneBot.add(bRestart);
+        zoneBot.add(counter);
+        zoneBot.add(bSolve);
         this.setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
         gc.gridx = 0;
         gc.gridy = 0;
         this.add(game,gc);
         gc.gridy = 1;
-        this.add(counter,gc);
+        this.add(zoneBot,gc);
 
         // ajout des listener d'events
         addKeyListener(new KeyListener(){
            @Override
            public void keyPressed(KeyEvent e) {
-               if (!Interface.this.b.isSolved()) {
+               if (!Interface.this.b.isSolved() && !Interface.this.b.getSolving()) {
                     if (e.getKeyCode() == KeyEvent.VK_UP) {
                         Interface.this.b.move(Board.Direction.UP);
                     }
@@ -66,10 +97,7 @@ public class Interface extends JFrame {
                         Interface.this.b.move(Board.Direction.RIGHT);
                     }
                     Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
-                }
-               if (Interface.this.b.isSolved()) {
-                        // message de fin
-                        endGame();
+                    Interface.this.counter.updateUI();
                 }
            }
 
@@ -92,30 +120,29 @@ public class Interface extends JFrame {
 
             @Override
             public void mousePressed(MouseEvent e) {
+              if (!Interface.this.b.isSolved() && !Interface.this.b.getSolving()) {
                 int x = e.getX();
                 int y = e.getY();
                 x = Math.round(x/Interface.this.tileSize);
                 y = Math.round(y/Interface.this.tileSize);
                 Tile[][] grid = Interface.this.b.getGrid();
                 if (grid[y][x] instanceof FullTile) {
-                    EmptyTile empty = Interface.this.b.getEmptyTile();
-                    int emptyX = empty.getX();
-                    int emptyY = empty.getY();
-                    ArrayList<Board.Direction> listNeighbours = Interface.this.b.neighbours(emptyX,emptyY);
-                    ArrayList<Integer> coordEmpty = new ArrayList<>();
-                    coordEmpty.add(x-emptyX);
-                    coordEmpty.add(y-emptyY);
-                    for (Board.Direction dir : listNeighbours) {
-                        if (dir.getCoords().equals(coordEmpty)) {
-                            Interface.this.b.move(dir);
-                            Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
-                          }
-                        }
-                        if (Interface.this.b.isSolved()) {
-                                 // message de fin
-                                 endGame();
-                         }
+                  EmptyTile empty = Interface.this.b.getEmptyTile();
+                  int emptyX = empty.getX();
+                  int emptyY = empty.getY();
+                  ArrayList<Board.Direction> listNeighbours = Interface.this.b.neighbours(emptyX,emptyY);
+                  ArrayList<Integer> coordEmpty = new ArrayList<>();
+                  coordEmpty.add(x-emptyX);
+                  coordEmpty.add(y-emptyY);
+                  for (Board.Direction dir : listNeighbours) {
+                    if (dir.getCoords().equals(coordEmpty)) {
+                      Interface.this.b.move(dir);
+                      Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
+                      Interface.this.counter.updateUI();
+                    }
+                  }
                 }
+              }
             }
 
             @Override
@@ -158,24 +185,5 @@ public class Interface extends JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
-    }
-
-    /**
-      * Ouvre une pop-up pour demander si le joueur veut recommencer une partie
-      */
-    public void endGame() {
-      this.timer = new Timer(1000,new ActionListener () {
-        public void actionPerformed(ActionEvent e) {
-          int askRestart = JOptionPane.showConfirmDialog (null, "Voulez-vous recommencer ?","Fin de la partie",JOptionPane.YES_NO_OPTION);
-          if (askRestart == JOptionPane.YES_OPTION) {
-              Interface.this.b.shuffle(10000);
-          } else {
-              Interface.this.dispose();
-          }
-          Interface.this.timer.stop();
-        }
-      });
-
-      timer.start();
     }
 }

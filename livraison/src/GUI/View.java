@@ -108,16 +108,20 @@ public class View extends JPanel implements ModelListener {
       for (int j = 0; j < this.model.getHeight(); j++) {
         for (int i = 0; i < this.model.getWidth(); i++) {
               if (grid[j][i] instanceof FullTile) {
-                Image im = this.hmap.get(((FullTile)grid[j][i]).getId());
-                g.drawImage(im,size*i, size*j,size, size, this);
-                if (!solved) {
-                  if (this.x == i && this.y == j) {
-                    Color couleurHover = new Color(255,255,255,30);
-                    g.setColor(couleurHover);
-                    g.fillRect(size*i, size*j,size, size);
+                try {
+                  Image im = this.hmap.get(((FullTile)grid[j][i]).getId());
+                  g.drawImage(im,size*i, size*j,size, size, this);
+                  if (!solved) {
+                    if (this.x == i && this.y == j) {
+                      Color couleurHover = new Color(255,255,255,30);
+                      g.setColor(couleurHover);
+                      g.fillRect(size*i, size*j,size, size);
+                    }
+                    g.setColor(Color.black);
+                    g.drawRect(size*i, size*j,size, size);
                   }
-                  g.setColor(Color.black);
-                  g.drawRect(size*i, size*j,size, size);
+                } catch (Exception e) {
+                  continue;
                 }
               } else {
                 if (solved) {

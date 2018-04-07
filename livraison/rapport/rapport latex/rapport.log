@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9) (preloaded format=pdflatex 2016.10.5)  7 APR 2018 15:57
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9) (preloaded format=pdflatex 2016.10.5)  7 APR 2018 18:49
 entering extended mode
 **./rapport.tex
 (rapport.tex
@@ -569,12 +569,12 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 \tf@toc=\write3
 \openout3 = `rapport.toc'.
 
- [1] <images/Capture.PNG, id=16, 455.45157pt x 484.81125pt>
+ [1] <images/Capture.PNG, id=16, 453.19313pt x 493.0922pt>
 File: images/Capture.PNG Graphic file (type png)
 
 <use images/Capture.PNG>
 Package pdftex.def Info: images/Capture.PNG used on input line 65.
-(pdftex.def)             Requested size: 227.72522pt x 242.40503pt.
+(pdftex.def)             Requested size: 226.59601pt x 246.54549pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 75--77
 
@@ -596,6 +596,10 @@ File: images/Capture2.PNG Graphic file (type png)
 Package pdftex.def Info: images/Capture2.PNG used on input line 94.
 (pdftex.def)             Requested size: 94.10132pt x 41.40457pt.
 
+Underfull \hbox (badness 10000) in paragraph at lines 100--101
+
+ []
+
 [3 <./images/model.png> <./images/Capture2.PNG>] (rapport.aux) ) 
 Here is how much of TeX's memory you used:
  3601 strings out of 493334
@@ -604,7 +608,7 @@ Here is how much of TeX's memory you used:
  7076 multiletter control sequences out of 15000+200000
  12451 words of font info for 31 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 40i,6n,30p,366b,439s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 40i,6n,30p,496b,439s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Fil
 es (x86)/MiKTeX 2.9/fonts/enc/dvips/cm-super/cm-super-t1.enc}<C:/Program Files 
 (x86)/MiKTeX 2.9/fonts/type1/public/cm-super/sfbx1200.pfb><C:/Program Files (x8
@@ -614,7 +618,7 @@ TeX 2.9/fonts/type1/public/cm-super/sfcc1200.pfb><C:/Program Files (x86)/MiKTeX
  2.9/fonts/type1/public/cm-super/sfrm1200.pfb><C:/Program Files (x86)/MiKTeX 2.
 9/fonts/type1/public/cm-super/sfrm1440.pfb><C:/Program Files (x86)/MiKTeX 2.9/f
 onts/type1/public/cm-super/sfrm2488.pfb>
-Output written on rapport.pdf (4 pages, 766962 bytes).
+Output written on rapport.pdf (4 pages, 771362 bytes).
 PDF statistics:
  52 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

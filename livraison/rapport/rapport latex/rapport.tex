@@ -97,5 +97,17 @@ Tout d'abord, nous avons une fonction \textbf{createGrid} qui permet d'initialis
 
 Ensuite, nous avons créer les déplacements de la case vide, nous avons d'abord commencer par créer des énums UP, DOWN, LEFT, RIGHT qui représentent à la direction de déplacement de la case vide.
 
+Pour mélanger le jeu, on choisi un mouvement aléatoire selon les mouvements possible de la case vide (sous forme d'énums) puis on déplace la case vide jusqu'en bas à droite. On garde en mémoire le coup aléatoire effectué pour ne pas faire le coup opposé pour qui ne s'annulent pas comme par exemple UP o DOWN o UP o DOWN qui ne modifie pas le jeu une fois le mélange appliqué. Pour effectuer un mouvement utilise une énum donnée et on effectue le mouvement.\\
+
+La récupération des coups jouables de la case vide est un voisinage de taille 4 de rayon 1 qui correspond aux quatre direction haut, bas, gauche, droite et la fonction \textbf{neighbours} qui selon une coordonnée dans la grille du jeu donne toutes les possibilité des directions.
+
+\section{Conception du package GUI}
+
+\subsection{Organisation des classes}
+
+
+\subsection{Fonctionnement GUI}
+
+D'abord, pour représenter l'état du jeu, la classe \textbf{View} permet à partir d'un chemin d'une image et d'un Board découper l'image et lier
 
 \end{document}

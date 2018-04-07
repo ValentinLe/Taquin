@@ -63,6 +63,10 @@ public class View extends JPanel implements ModelListener {
     return Math.round(Math.min(lenX,lenY));
   }
 
+  /**
+    * Charge une image
+    * @param newPath chemin de l'image a charger
+    */
   public void setImage(String newPath) {
     try {
       File file = new File(newPath);
@@ -72,6 +76,9 @@ public class View extends JPanel implements ModelListener {
     }
   }
 
+  /**
+    * Découpe l'image et construit un HashMap id : image
+    */
   public void createHashMap() {
     this.hmap = new HashMap<>();
     this.imageSize = findImageSize(this.image);

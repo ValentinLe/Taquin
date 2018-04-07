@@ -58,7 +58,7 @@ L2-Info-groupe-4A
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
 
-L'objectif de ce projet étant de réaliser un Taquin qui est un casse-tête consistant à déplacer des cases d'un plateau afin de les replacer dans l'ordre et de reconstituer l'image ou le paterne souhaité.
+L'objectif de ce projet de POO est de réaliser un taquin : un casse-tête consistant à déplacer des cases d'un plateau afin de les replacer dans l'ordre et ainsi reconstituer une image ou un motif donné.
 
 \begin{figure}[!h]
 \centering
@@ -66,16 +66,18 @@ L'objectif de ce projet étant de réaliser un Taquin qui est un casse-tête con
 \caption{Jeu du Taquin}
 \end{figure}
 
-Nous avons séparé le projet en deux packages, le premier comporte la version console avec la structure du jeu (le package \textbf{model}) et le deuxième contient toute la partie graphique (le package \textbf{GUI}), nous avons un troisième dossier qui possède les images pour l'interface graphique (le package \textbf{ressources}).
+Nous avons séparé le projet en deux packages, le premier comportant le modèle du jeu utilisable en version console (le package \textbf{model}), et le deuxième, l'implémentation de l'interface graphique (le package \textbf{GUI}). Nous utilisons également un troisième dossier \textbf{ressources} où sont stockées les images utilisées par l'application.
 
 \section{La conception du package model}
 
+Le modèle de base du taquin est constitué d'une grille d'objets représentant les différentes cases. Les cases pleines ont des identifiants pour permettre de mettre en place la condition de victoire : on gagne si chaque identifiant est placé aux bonnes coordonnées.
+
 \subsection{Organisation des classes}
 
-Tout d'abord, nous avons représenté les cases par deux types de classe, FullTile pour les cases pleines et EmptyTile pour la zone vide qu'on déplacera. Ces deux classes possède des attributs en commun qui sont les coordonnées X et Y de la case c'est pourquoi on a fait une classe abstraite Tile qui possède ces coordonnées.\\
-La classe FullTile possède un identifiant sous forme d'entier qui la caractérise des autres cases, on s'arrangera donc à leur mettre une valeur différente pour chaqu'une de ces cases.\\
+Tout d'abord, nous avons représenté les cases par deux classes, \textit{\textbf{FullTile}} pour les cases pleines et \textit{\textbf{EmptyTile}} pour la zone vide qu'on déplacera. Ces classes possèdent des attributs en commun qui sont les coordonnées X et Y dans la grille ; c'est pourquoi nous avons conçu une classe abstraite \textit{Tile} qui possède ces coordonnées et dont héritent FullTile et EmptyTile.\\
+La classe FullTile diffère de EmptyTile en ce qu'elle possède en plus un identifiant entier que l'on rend unique pour chaque instance utilisée.\\
 
-Ensuite, nous avons une classe Board qui représentera l'état du jeux et qui fera en sorte de déplacer la case vide, résoudre le niveau avec un solveur, mélanger le jeu, etc.
+Ensuite, nous avons une classe Board qui décrit l'état du jeu et le fait évoluer.
 
 \begin{figure}[!h]
 \centering
@@ -85,9 +87,12 @@ Ensuite, nous avons une classe Board qui représentera l'état du jeux et qui fe
 
 \newpage
 
-\subsection{Algorithmes du Board}
+\subsection{Fonctionnement du modèle}
 
-Tout d'abord, nous avons une fonction \textbf{createGrid} qui permet d'initialiser une grille avec des FullTile et une EmptyTile et une fonction \textbf{toString} qui permet de l'afficher.
+Comme nous l'avons expliqué, l'initialisation et la mise à jour du modèle se font par le biais de la classe Board.\\
+
+En premier lieu, nous avons une fonction \textbf{createGrid} qui permet d'initialiser une grille avec des FullTile et une EmptyTile et une fonction \textbf{toString} qui permet de l'afficher.\\
+La grille ainsi créée est dans un état résolu où les identifiants des cases sont rangés dans l'ordre ci-dessous :
 
 \begin{figure}[!h]
 \centering
@@ -95,11 +100,19 @@ Tout d'abord, nous avons une fonction \textbf{createGrid} qui permet d'initialis
 \caption{Affiche d'une grille 3x3 initialisée}
 \end{figure}
 
-Ensuite, nous avons créer les déplacements de la case vide, nous avons d'abord commencer par créer des énums UP, DOWN, LEFT, RIGHT qui représentent à la direction de déplacement de la case vide.
+Puis, nous avons crée les déplacements de la case vide, nous avons d'abord commencer par créer une enum Direction avec quatre instances UP, DOWN, LEFT, RIGHT qui représentent une direction de déplacement. Nous utilisons cette enum dans la fonction \textbf{move} qui déplace la case vide dans la direction donnée en argument.\\
 
-Pour mélanger le jeu, on choisi un mouvement aléatoire selon les mouvements possible de la case vide (sous forme d'énums) puis on déplace la case vide jusqu'en bas à droite. On garde en mémoire le coup aléatoire effectué pour ne pas faire le coup opposé pour qui ne s'annulent pas comme par exemple UP o DOWN o UP o DOWN qui ne modifie pas le jeu une fois le mélange appliqué. Pour effectuer un mouvement utilise une énum donnée et on effectue le mouvement.\\
+Pour mélanger le jeu, on choisit un mouvement aléatoire selon les mouvements possibles de la case vide puis on déplace la case vide jusqu'en bas à droite, à sa position initiale. On garde en mémoire le dernier coup effectué afin d'éviter des coups inutiles qui réduisent l'efficacité du mélange ; si l'on va vers le haut lors d'un coup, on interdit d'aller vers le bas au coup suivant.\\
+Le mélange est effectué par la fonction \textbf{shuffle} qui prend en argument le nombre de coups à réaliser avant de considérer le mélange comme terminé. Dans la version finale, nous faisons 10 000 mélanges. Cela assure une bonne dispersion des cases pour un temps de calcul négligeable.\\
+Comme la grille initiale est résolue, l'état obtenu par le mélange n'est pas bloquant puisqu'il existe une séquence de coups menant de cet état à la solution.\\
 
-La récupération des coups jouables de la case vide est un voisinage de taille 4 de rayon 1 qui correspond aux quatre direction haut, bas, gauche, droite et la fonction \textbf{neighbours} qui selon une coordonnée dans la grille du jeu donne toutes les possibilité des directions.
+La récupération des coups jouables de la case vide est un voisinage de taille 4 de rayon 1 qui correspond aux quatre directions haut, bas, gauche, droite. La fonction \textbf{neighbours} donne selon une coordonnée dans la grille du jeu donne toutes les directions possibles.\\
+
+Le modèle dispose aussi d'une fonction \textbf{solve} qui résout le puzzle. Nous avons utilisé une approche extrêmement simple consistant à jouer un coup aléatoire jusqu'à obtenir la configuration initiale de la grille.\\
+Cette simplicité a un coût : le solveur peut réaliser jusqu'à 500 000 coups pour résoudre un simple puzzle 3x3, et devient très lent dès que l'on veut augmenter la taille.
+Nous sommes conscients qu'il est possible de réaliser un solveur plus efficace, par exemple via l'utilisation de l'algorithme A*, mais nous avons préféré ne pas nous focaliser sur cet aspect du projet.\\
+
+La classe principale permet de jouer au taquin en interface console. Le joueur peut déplacer la case vide avec Z,Q,S,D.
 
 \section{Conception du package GUI}
 
@@ -108,6 +121,6 @@ La récupération des coups jouables de la case vide est un voisinage de taille 
 
 \subsection{Fonctionnement GUI}
 
-D'abord, pour représenter l'état du jeu, la classe \textbf{View} permet à partir d'un chemin d'une image et d'un Board découper l'image et lier
+D'abord, pour représenter l'état du jeu, la classe \textbf{View} permet à partir d'un chemin, d'une image et d'un Board découper l'image et lier
 
 \end{document}

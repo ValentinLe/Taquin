@@ -12,7 +12,6 @@ public class Main {
 
 	public static void main(String[] args) {
 		boolean exit = false;
-		long start= System.currentTimeMillis();
 		Board mystic_square= new Board(3,3);
 		mystic_square.shuffle(10000);
 		new Interface(mystic_square,"ressources/espace.jpeg");
@@ -20,8 +19,9 @@ public class Main {
 			Scanner sc= new Scanner(System.in);
 			EmptyTile empty = mystic_square.getEmptyTile();
 			ArrayList<Board.Direction> possible_moves = mystic_square.neighbours(empty.getX(), empty.getY());
+			System.out.println("\033[H\033[2J");
 			System.out.println(mystic_square);
-			System.out.println("Choisissez un déplacement: z, q, s, d   Résolution automatique : r   Quitter : e");
+			System.out.println("Choisissez un déplacement: z, q, s, d   Résolution automatique : a   Recommencer : r  Quitter : e");
 			String selectMove = sc.nextLine();
 
 			if (selectMove.equals("z") && (possible_moves.contains(Board.Direction.UP))) {
@@ -36,8 +36,12 @@ public class Main {
 			if (selectMove.equals("d") && (possible_moves.contains(Board.Direction.RIGHT))) {
 				mystic_square.move(Board.Direction.RIGHT);
 			}
-			if (selectMove.equals("r"))  {
+			if (selectMove.equals("a"))  {
 				mystic_square.solve();
+				System.out.println(mystic_square);
+			}
+			if (selectMove.equals("r"))  {
+				mystic_square.shuffle(10000);
 				System.out.println(mystic_square);
 			}
 			if (selectMove.equals("e"))  {
@@ -48,7 +52,6 @@ public class Main {
 		if (!(exit)) {
 		System.out.println(mystic_square);
 		System.out.println("résolu en " + mystic_square.getMoveCount() + " coups");
-		System.out.println(System.currentTimeMillis()-start);
 		}
 	}
 }

@@ -100,13 +100,13 @@ La grille ainsi créée est dans un état résolu où les identifiants des cases
 \caption{Affiche d'une grille 3x3 initialisée}
 \end{figure}
 
-Puis, nous avons crée les déplacements de la case vide, nous avons d'abord commencer par créer une enum Direction avec quatre instances UP, DOWN, LEFT, RIGHT qui représentent une direction de déplacement. Nous utilisons cette enum dans la fonction \textbf{move} qui déplace la case vide dans la direction donnée en argument.\\
+Puis, nous avons crée les déplacements de la case vide, nous avons d'abord commencer par créer une enum Direction avec quatre instances UP, DOWN, LEFT, RIGHT qui représentent une direction de déplacement. Nous utilisons cette enum dans la méthode \textbf{move} qui déplace la case vide dans la direction donnée en argument. Cette méthode vérifie également la validité du mouvement par rapport aux limites de la grille. \\
 
 Pour mélanger le jeu, on choisit un mouvement aléatoire selon les mouvements possibles de la case vide puis on déplace la case vide jusqu'en bas à droite, à sa position initiale. On garde en mémoire le dernier coup effectué afin d'éviter des coups inutiles qui réduisent l'efficacité du mélange ; si l'on va vers le haut lors d'un coup, on interdit d'aller vers le bas au coup suivant.\\
 Le mélange est effectué par la fonction \textbf{shuffle} qui prend en argument le nombre de coups à réaliser avant de considérer le mélange comme terminé. Dans la version finale, nous faisons 10 000 mélanges. Cela assure une bonne dispersion des cases pour un temps de calcul négligeable.\\
-Comme la grille initiale est résolue, l'état obtenu par le mélange n'est pas bloquant puisqu'il existe une séquence de coups menant de cet état à la solution.\\
+Comme la grille initiale est résolue, l'état obtenu par le mélange n'est pas bloquant puisqu'il existe une séquence de coups menant de cet état à la solution et qu'il est impossible au joueur de bloquer le jeu en utilisant des déplacements valides.\\
 
-La récupération des coups jouables de la case vide est un voisinage de taille 4 de rayon 1 qui correspond aux quatre directions haut, bas, gauche, droite. La fonction \textbf{neighbours} donne selon une coordonnée dans la grille du jeu donne toutes les directions possibles.\\
+La récupération des coups jouables de la case vide est un voisinage de taille 4 de rayon 1 qui correspond aux quatre directions haut, bas, gauche, droite. La fonction \textbf{neighbours} donne selon une coordonnée dans la grille du jeu toutes les directions possibles.\\
 
 Le modèle dispose aussi d'une fonction \textbf{solve} qui résout le puzzle. Nous avons utilisé une approche extrêmement simple consistant à jouer un coup aléatoire jusqu'à obtenir la configuration initiale de la grille.\\
 Cette simplicité a un coût : le solveur peut réaliser jusqu'à 500 000 coups pour résoudre un simple puzzle 3x3, et devient très lent dès que l'on veut augmenter la taille.
@@ -116,11 +116,11 @@ La classe principale permet de jouer au taquin en interface console. Le joueur p
 
 \section{Conception du package GUI}
 
-L'interface graphique est composée de deux fenêtres, celle permettant de choisir l'image du jeu et la deuxième qui est le jeu en lui-même.
+L'interface graphique est composée de deux fenêtres, l'une permettant de choisir l'image du jeu et l'autre affichant le jeu en lui-même.
 
 \subsection{Organisation des classes}
 
-L'interface graphique est composée de vue \textbf{View}, du model \textbf{Board, Tile} et du contrôleur présent dans \textbf{Interface} (clics de souris et touches du clavier). La vue implémente \textbf{ModelListener} qui permet de l'actualiser lorsque un mouvement du model se fait. Le model (ici le \textbf{Board}) étend de \textbf{AbstractModeleEcoutable} qui permet d'ajouter ou supprimer des écouteurs mais aussi d'une méthode qui permet d'actualiser tous les écouteurs qu'on fera appelle lors de l'exécution de la fonction \textbf{move}. Les contrôleurs lancer le mouvement du model qui va lui actualiser la vue.
+L'interface graphique est composée de la vue \textbf{View}, du modèle \textbf{Board, Tile} et du contrôleur présent dans \textbf{Interface} (clics de souris et touches du clavier). La vue implémente \textbf{ModelListener}, ce qui permet de l'actualiser lorsque le modèle est modifié. Le modèle (ici le \textbf{Board}) hérite de \textbf{AbstractModeleEcoutable} qui permet d'ajouter ou supprimer des écouteurs mais aussi d'actualiser tous les écouteurs lors de l'exécution de la fonction \textbf{move}. Les contrôleurs lancent le mouvement du modèle qui va lui actualiser la vue.
 
 \begin{figure}[!h]
 \centering
@@ -131,17 +131,18 @@ L'interface graphique est composée de vue \textbf{View}, du model \textbf{Board
 
 \subsection{Fonctionnement GUI}
 
-D'abord, pour représenter l'état du jeu, la classe \textbf{View} permet à partir d'un chemin, d'une image et d'un Board découper l'image et lier pour chaque identifiant une partie de l'image qui lui correspond. La case vide ne possède pas d'identifiant et pourtant elle a une image qui est associé à son identifiant si elle en possédait un, c'est comme cela que quand le puzzle est résolut, on dessine toute l'image sans la case vide et on enlève aussi le quadrillage pour avoir l'image propre.
+D'abord, pour représenter l'état du jeu, la classe \textbf{View} va, à partir d'un chemin, d'une image et d'un Board, découper l'image et lier pour chaque identifiant une partie de l'image qui lui correspond. La case vide ne possède pas d'identifiant, néanmoins elle a également une image qui est associée de façon à ce que l'image complète soit affichée lorsque le puzzle est résolu. On enlève aussi le quadrillage pour avoir une image plus esthétique.
 
 \begin{figure}[!h]
 \centering
 \includegraphics[scale=0.4]{images/Capture3.PNG}
 \hspace{0.2cm}
 \includegraphics[scale=0.4]{images/Capture4.PNG}
-\caption{Visuel de la résolution du Taquin}
+\caption{Visuel de la résolution du taquin}
 \end{figure}
 
-Pour choisir l'image qui est en fond, nous avons fait une autre interface qui va chercher tous les éléments qui sont dans le dossier \textbf{ressources} (qui sont que des images) et qui seront listé dans une liste (en utilisant JList, Vector et JScrollPane pour gérer une plus grande quantité d'image). On ajoute dans le vecteur que les noms des images sans l'extension et on créer la JList avec le Vector en argument. Ensuite on créer le JScrollPane et on ajoute la JList. Pour ajouter le tout, on ajoute le JScrollPane de la même manière qu'un JPanel avec un \textbf{add} dans la frame. Quand on sélectionne une image dans la liste, elle s'affiche sur la droite de la liste. Enfin, une fois l'image voulu sélectionné, en appuyant sur le bouton \textbf{Jouer} on lance l'interface du jeu avec l'image choisi en fond. Toutes les images sont possible d'ajouter pour le format et la taille mais si l'image est petite, elle sera étendu et le visuel sera pixelisé.
+Pour choisir l'image qui est en fond, nous avons fait une autre interface qui va lister tous les éléments qui sont dans le dossier \textbf{ressources} (ne contenant que des images) en utilisant JList, Vector et JScrollPane pour gérer une plus grande quantité d'images. On ajoute dans le Vector les noms de fichier sans extension et on crée la JList avec le Vector en argument.\\
+Ensuite, on crée le JScrollPane et on ajoute la JList. Pour intégrer le tout, on ajoute le JScrollPane de la même manière qu'un JPanel avec un \textbf{add} dans la frame. Quand on sélectionne une image dans la liste, elle s'affiche en grand à côté. Enfin, une fois l'image voulue sélectionnée, il suffit d'appuyer sur le bouton \textbf{Jouer} pour lancer l'interface du jeu avec l'image choisie en fond. On peut utiliser n'importe quelle image, cependant il est évident que plus l'image est petite par rapport à la vue, plus elle sera pixelisée en jeu.
 
 \begin{figure}[!h]
 \centering
@@ -155,23 +156,23 @@ Pour choisir l'image qui est en fond, nous avons fait une autre interface qui va
 \newpage
 \vspace{0.1cm}
 \includegraphics[scale=0.6]{images/Capture7.PNG}
-\caption{Interface de séléction d'image}
+\caption{Interface de sélection d'image}
 \end{figure}
 
 \newpage
 
-Les déplacements sont fait soit avec le clic de la souris ou soit avec les flèches directionnelles du clavier.\\
-Pour le déplacement de la souris, on récupère la position du clic et on le divise par la taille que les cases ont et enfin on prend la partie entière ce qui nous donne les coordonnées en cases du clic de souris. Il nous reste maintenant à tester si le clic de la souris correspond à une énums, on va soustraire les coordonnées de la case cliquée avec la case vide ce qui nous donne le vecteur de déplacement et si ce vecteur correspond à une des énums des positions jouable de la case vide on effectue le mouvement sinon on fait rien.\\
-Pour le déplacement au clavier, c'est plus simple, on teste qu'elle touche est pressée et si c'est la touche du haut on lance la fonction \textbf{move} du Board (qui test si la case de destination est dans la grille), de même pour les autres directions.\\
+Les déplacements sont réalisables soit avec le clic de la souris sur une case pleine, soit avec les flèches directionnelles du clavier.\\
+Pour le déplacement à la souris, on récupère la position du clic, on le divise par la taille des cases et on prend la partie entière. Ceci nous donne les coordonnées du clic dans la grille de jeu. Il nous reste maintenant à tester si le clic est valide. Pour cela, on soustrait les coordonnées de la case cliquée avec celles de la case vide pour obtenir le vecteur de déplacement ; si ce vecteur correspond à une instance de l'enum Direction, on effectue le mouvement, sinon on ne fait rien.\\
+Pour le déplacement au clavier, c'est plus simple, on teste quelle touche est pressée et on lance la fonction \textbf{move} du Board avec la direction adéquate en argument.\\
 
-Un bouton \textbf{recommencer} et \textbf{resolution} sont présent en bas de l'interface de jeu qui permettent respectivement de recommencer le jeu et de le résoudre. Pour recommencer le jeu, on a juste à mélanger le jeu.
+Deux boutons \textbf{recommencer} et \textbf{résolution} sont présents en bas de l'interface de jeu. Ils permettent respectivement de recommencer le jeu et de lancer le solveur. Pour recommencer le jeu, on a juste à mélanger le jeu. L'état obtenu est aussi soluble par propagation des propriétés énoncées en première partie.
 
 \section*{Conclusion}
 \addcontentsline{toc}{section}{Conclusion}
 
-L'objectif du projet a été atteint, nous avons réalisé le jeu du Taquin jouable en console et une version jouable en interface graphique.\\
+L'objectif du projet a été atteint, nous avons programmé le jeu du taquin jouable en console et avec une interface graphique et en suivant le modèle MVC.\\
 
-Nous aurions pu améliorer ce projet par exemple en proposant au joueur les dimensions de la grille de jeu que nous avons mis par défaut en 3x3 mais nous avons fait en sorte que la grille et l'interface soient adaptatif aux dimension de la grille.
+Nous aurions pu améliorer ce projet en étoffant le solveur ou en proposant au joueur les dimensions de la grille de jeu - que nous avons mis par défaut en 3x3 - mais nous avons fait en sorte que le modèle et l'interface s'adaptent bien aux dimensions de la grille.
 
 \newpage
 

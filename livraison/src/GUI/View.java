@@ -44,6 +44,8 @@ public class View extends JPanel implements ModelListener {
 
   /**
     * Modifie les positions x et y qui correspond aux coordonnées de la souris en cases
+    * @param newX la nouvelle coordonnée en X
+    * @param newY la nouvelle coordonnée en Y
     */
   public void setPosition(int newX, int newY) {
       this.x = newX;
@@ -52,6 +54,8 @@ public class View extends JPanel implements ModelListener {
 
   /**
     * Trouve la bonne dimension pour découper l'image en prenant le minimum entre la hauteur et la largeur
+    * @param im l'image dont il faut trouver la dimension
+    * @return la taille de chaque case dans l'image
     */
   public int findImageSize(BufferedImage im) {
     int width = im.getWidth();
@@ -135,6 +139,7 @@ public class View extends JPanel implements ModelListener {
 
   /**
     * Actualise la vue
+    * @param src l'object à actualiser
     */
   @Override
   public void update(Object src) {

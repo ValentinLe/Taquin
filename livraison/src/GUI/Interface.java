@@ -45,7 +45,6 @@ public class Interface extends JFrame {
           @Override
           public void actionPerformed(ActionEvent e){
             if (!Interface.this.b.getSolving()) {
-              Interface.this.b.createGrid();
               Interface.this.b.shuffle(10000);
               Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
               Interface.this.counter.updateUI();

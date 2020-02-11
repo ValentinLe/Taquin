@@ -24,6 +24,9 @@ public class SelectImage extends JFrame {
   private String[] images;
   private int nbImages;
 
+  // chemin des images
+  private static final String imagesFolderPath = "ressources/";
+
   /**
     * Constructeur de la classe
     */
@@ -32,7 +35,7 @@ public class SelectImage extends JFrame {
     this.setResizable(true);
     this.setTitle("Select image");
     this.indice = 0;
-    this.images = new File("ressources").list();
+    this.images = new File(this.imagesFolderPath).list();
     this.nbImages = images.length;
 
     this.setPathAndImage();
@@ -126,7 +129,7 @@ public class SelectImage extends JFrame {
     * Modifie le chemin de l'image en fonction de l'element séléctionné de la liste et lit l'image selon ce chemin
     */
   public void setPathAndImage() {
-    this.path = "ressources/" + this.images[this.indice];
+    this.path = this.imagesFolderPath + this.images[this.indice];
     try {
       File file = new File(this.path);
       this.image = ImageIO.read(file);

@@ -84,16 +84,16 @@ public class Interface extends JFrame {
            public void keyPressed(KeyEvent e) {
                if (!Interface.this.b.isSolved() && !Interface.this.b.getSolving()) {
                     if (e.getKeyCode() == KeyEvent.VK_UP) {
-                        Interface.this.b.move(Board.Direction.UP);
+                        Interface.this.b.move(Direction.UP);
                     }
                     if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                        Interface.this.b.move(Board.Direction.DOWN);
+                        Interface.this.b.move(Direction.DOWN);
                     }
                     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                        Interface.this.b.move(Board.Direction.LEFT);
+                        Interface.this.b.move(Direction.LEFT);
                     }
                     if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                        Interface.this.b.move(Board.Direction.RIGHT);
+                        Interface.this.b.move(Direction.RIGHT);
                     }
                     Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
                     Interface.this.counter.updateUI();
@@ -129,12 +129,12 @@ public class Interface extends JFrame {
                   EmptyTile empty = Interface.this.b.getEmptyTile();
                   int emptyX = empty.getX();
                   int emptyY = empty.getY();
-                  ArrayList<Board.Direction> listNeighbours = Interface.this.b.neighbours(emptyX,emptyY);
-                  ArrayList<Integer> coordEmpty = new ArrayList<>();
-                  coordEmpty.add(x-emptyX);
-                  coordEmpty.add(y-emptyY);
-                  for (Board.Direction dir : listNeighbours) {
-                    if (dir.getCoords().equals(coordEmpty)) {
+                  ArrayList<Direction> listNeighbours = Interface.this.b.neighbours(emptyX,emptyY);
+                  int dirWantedX = x - emptyX;
+                  int dirWantedY = y - emptyY;
+                  // pour tester si c'est un coup jouable
+                  for (Direction dir : listNeighbours) {
+                    if (dir.getX() == dirWantedX && dir.getY() == dirWantedY) {
                       Interface.this.b.move(dir);
                       Interface.this.counter.setText("Nombre de coups : " + Interface.this.b.getMoveCount());
                       Interface.this.counter.updateUI();

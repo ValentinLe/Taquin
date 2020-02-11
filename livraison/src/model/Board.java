@@ -9,66 +9,28 @@ import GUI.AbstractModeleEcoutable;
 	*/
 public class Board extends AbstractModeleEcoutable {
 
+		// dimentions de la grille
 		private int width;
 		private int height;
+
+		// grille
 		private Tile[][] grid;
+
+		// on garde un pointer sur la case vide pour la retrouver plus rapidement
 		private EmptyTile empty_tile;
-		private Direction memory;
+
+		// compteur de coups
 		private int nb_moves;
+
+		// boolean pour savoir si le jeu est fini sans avoir a rappeller isSolved
+		// c'est une erreur de conception, il devrai etre dans une fonction mais pas
+		// en attribut de la classe comme ca...
 		private boolean solving;
 
-		/**
-		* Enum symbolisant la direction de déplacement d'une case.
-		*/
-		public enum Direction {
-			UP (0,-1),
-			LEFT (-1,0),
-			DOWN (0,1),
-			RIGHT (1,0);
-
-			private final int x;
-			private final int y;
-
-
-			Direction(int x, int y) {
-				this.x=x;
-				this.y=y;
-			}
-
-			/**
-				* Accesseur permettant de récupérer les coordonnées d'une direction.
-				* @return Le tableau des coordonnées lié à l'instance de l'enum.
-			*/
-			public ArrayList<Integer> getCoords() {
-				ArrayList<Integer> l = new ArrayList<Integer>();
-				l.add(this.x);
-				l.add(this.y);
-				return l;
-			}
-
-			/**
-				* Retourne la direction opposée celle appelant cette méthode.
-				* @return La direction opposée celle appelant cette méthode.
-			*/
-			public Direction opposite() {
-				Direction res=UP;
-				switch (this) {
-					case UP:
-						res=DOWN;
-						break;
-					case LEFT:
-						res=RIGHT;
-						break;
-					case DOWN:
-						res=UP;
-						break;
-					case RIGHT:
-						res=LEFT;
-						break;
-				}
-				return res;
-			}
-		}
+		// ça c'etait pour garder en memoire le mouvement qui a ete effectue pour
+		// eviter au randomMove de prendre la direction opposee de celle qu'il vient
+		// de prendre
+		private Direction memory;
 
 		/**
 			* Constructeur de la classe.
@@ -136,14 +98,20 @@ public class Board extends AbstractModeleEcoutable {
 			* Les dimensions du taquin sont définies par les attributs width et height.
 		*/
 		public void createGrid() {
-			this.grid=new Tile[this.height][this.width];
-			for (int j=0; j<this.height;j++){
-				for (int i=0; i<this.width;i++){
-					if (i*j<(this.width-1)*(this.height-1)){
-						this.grid[j][i]=new FullTile(i,j,j*this.width+i);
+			this.grid = new Tile[this.height][this.width];
+			// le j correspond a la coordonnee y et le i a la coordonnee x
+			// faire une boucle qui parcours la largeur dans celle qui parcours la hauteur
+			// c'est pour faire un parcours dans le sens de lecture de gauche a droite
+			// et de haut en bas
+			for (int j = 0; j < this.height; j++){
+				for (int i = 0; i < this.width; i++){
+					if (i * j < (this.width-1) * (this.height-1)){
+						this.grid[j][i] = new FullTile(i,j,j*this.width+i);
 					} else {
-						this.empty_tile=new EmptyTile(i,j);
-						this.grid[j][i]=this.empty_tile;
+						// case vide sera placee en bas a gauche car c'est la seule case
+						// ou i*j == (this.width-1) * (this.height-1)
+						this.empty_tile = new EmptyTile(i,j);
+						this.grid[j][i] = this.empty_tile;
 					}
 				}
 			}
@@ -154,10 +122,14 @@ public class Board extends AbstractModeleEcoutable {
 		*/
 		public void randomMove() {
 			Random gen = new Random();
-			ArrayList<Direction> tab=this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
+			ArrayList<Direction> tab = this.neighbours(this.empty_tile.getX(), this.empty_tile.getY());
+			// on retire l'inverse du coup precedant
 			tab.remove(this.memory);
+			// on choisi un coup au hasard
 			Direction nextMove = tab.get(gen.nextInt(tab.size()));
-			this.memory=nextMove.opposite();
+			// on stocke dans la memoire l'inverse du coup qu'on a choisi pour ne
+			// pas le reprendre au tour d'apres
+			this.memory = nextMove.opposite();
 			this.move(nextMove);
 		}
 
@@ -188,9 +160,12 @@ public class Board extends AbstractModeleEcoutable {
 			* @return Le résultat du test.
 			*/
 		public boolean isSolved() {
-			for (int j=0; j<this.height;j++) {
-				for (int i=0; i<this.width;i++) {
-					if (this.grid[j][i] instanceof FullTile && ((FullTile)this.grid[j][i]).getId()!=j*this.width+i) {
+			for (int j = 0; j < this.height; j++) {
+				for (int i = 0; i < this.width; i++) {
+					if (this.grid[j][i] instanceof FullTile && ((FullTile)this.grid[j][i]).getId() != j*this.width+i) {
+						// l'id est que sur les cases pleine et si l'id de la case ne correspond
+						// pas a la numerotation de sa position j*largeur + i alors elle n'est pas
+						// bien placee
 						return false;
 					}
 				}
@@ -202,33 +177,63 @@ public class Board extends AbstractModeleEcoutable {
 			* Résout le puzzle de façon aléatoire.
 		*/
 		public void solve() {
+			// solving sert pour bloquer le jeu quand il est en train de se resoudre
 			this.solving = true;
+			// resolution avec mouvement aleatoire pas optimale, il vaut mieux utiliser
+			// A* avec la distance de manathan pour l'heuristique
 			while (!(this.isSolved())) {
-					this.randomMove();
+				this.randomMove();
 			}
 			this.solving = false;
 		}
 
 		/**
-			* Permute l'espace vide avec une pièce adjacente.
-			* @param d La direction du mouvement.
+		* test si la coordonnee (x,y) est dans la grille
+		* @param x la coordonnee en x
+		* @param y la coordonnee en y
+		* @return true si la coordonnee (x,y) est dans la grille
 		*/
-		public void move(Direction d){
-			int dest_x=this.empty_tile.getX()+d.getCoords().get(0);
-			int dest_y=this.empty_tile.getY()+d.getCoords().get(1);
-			if (dest_x>=0 && dest_x<this.width){
-				if (dest_y>=0 && dest_y<this.height){
+		public boolean isInIndex(int x, int y) {
+			return 0 <= x && x < this.width && 0 <= y && y < this.height;
+		}
+
+		/**
+			* Permute l'espace vide avec une pièce adjacente.
+			* @param dir La direction du mouvement.
+		*/
+		public void move(Direction dir){
+			int dest_x = this.empty_tile.getX() + dir.getX();
+			int dest_y = this.empty_tile.getY() + dir.getY();
+			if (this.isInIndex(dest_x, dest_y)) {
+					int emptyX = this.empty_tile.getX();
+					int emptyY = this.empty_tile.getY();
+					this.switchTile(emptyX, emptyY, dest_x, dest_y);
 					this.nb_moves++;
-					int xp=this.empty_tile.getX();
-					int yp=this.empty_tile.getY();
-					Tile tmp = new FullTile(xp,yp,((FullTile)this.grid[dest_y][dest_x]).getId());
-					this.grid[dest_y][dest_x]=this.grid[this.empty_tile.getY()][this.empty_tile.getX()];
-					this.grid[this.empty_tile.getY()][this.empty_tile.getX()]=tmp;
-					this.empty_tile.setX(dest_x);
-					this.empty_tile.setY(dest_y);
+					// on dit aux listeners qu'il s'est passee quelque chose et donc il
+					// fonts ce qu'ils ont a faire (par exemple s'actualiser pour le gui)
 					fireChange();
-					}
 				}
+		}
+
+			/**
+			* permutte deux cases de la grille
+			* @param t1x la coordonnee en X de la 1ere case
+			* @param t1y la coordonnee en Y de la 1ere case
+			* @param t2x la coordonnee en X de la 2eme case
+			* @param t2y la coordonnee en Y de la 2eme case
+			*/
+			public void switchTile(int t1x, int t1y, int t2x, int t2y) {
+				Tile temp = this.grid[t1y][t1x];
+
+				this.grid[t1y][t1x] = this.grid[t2y][t2x];
+				// on change les coordonnees de l'objet en (t1x, t1y)
+				this.grid[t1y][t1x].setX(t1x);
+				this.grid[t1y][t1x].setY(t1y);
+
+				this.grid[t2y][t2x] = temp;
+				// on change les coordonnees de l'objet en (t2x, t2y)
+				this.grid[t2y][t2x].setX(t2x);
+				this.grid[t2y][t2x].setY(t2y);
 			}
 
 			/**
@@ -260,11 +265,11 @@ public class Board extends AbstractModeleEcoutable {
 			*/
 		public String toString() {
 			String ch="";
-			for (int j=0; j<this.height;j++) {
-				for (int i=0; i<this.width;i++){
-					ch+=this.grid[j][i].toString() + " ";
+			for (int j = 0; j < this.height; j++) {
+				for (int i = 0; i < this.width; i++){
+					ch += this.grid[j][i].toString() + " ";
 				}
-					ch+="\n";
+				ch += "\n";
 			}
 			return ch;
 		}

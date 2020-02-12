@@ -5,6 +5,7 @@ package model;
 * Enum symbolisant la direction de déplacement d'une case.
 */
 public enum Direction {
+    
     // chaque "variable" UP, DOWN, ... creer un objet de type Direction avec les
     // valeur dans les parentheses qui sera appeller de l'exterieur par Direction.UP
     UP (0,-1),
@@ -17,8 +18,8 @@ public enum Direction {
 
 
     Direction(int x, int y) {
-    	this.x=x;
-    	this.y=y;
+    	this.x = x;
+    	this.y = y;
     }
 
     /**
@@ -26,7 +27,7 @@ public enum Direction {
      * @return la coordonnee en X de la direction
      */
     public int getX() {
-      return this.x;
+	return this.x;
     }
 
     /**
@@ -34,7 +35,7 @@ public enum Direction {
      * @return la coordonnee en Y de la direction
      */
     public int getY() {
-	     return this.y;
+	return this.y;
     }
 
     /**
@@ -42,20 +43,20 @@ public enum Direction {
     * @return La direction opposée celle appelant cette méthode.
     */
     public Direction opposite() {
-    	switch (this) {
-    	    case UP:
-    		    return DOWN;
-    	    case LEFT:
-    		    return RIGHT;
-    	    case DOWN:
-    		    return UP;
-    	    case RIGHT:
-    		    return LEFT;
+	switch (this) {
+	    case UP:
+		return DOWN;
+	    case LEFT:
+		return RIGHT;
+	    case DOWN:
+		return UP;
+	    case RIGHT:
+		return LEFT;
 	    }
-	     return null;
+	    return null;
     }
 
     public boolean equals(Direction other) {
-      return this.x == other.getX() && this.y == other.getY();
+	return this.x == other.getX() && this.y == other.getY();
     }
 }

@@ -1,14 +1,10 @@
-package GUI;
 
-import model.*;
-import java.awt.*;
-import java.util.Scanner;
+package gui;
 
-/**
-  * Classe principale de lancement de l'interface graphique
-  */
 public class Main {
-    public static void main(String[] args) {
-      new SelectImage();
+    
+    public static final void main(String args[]) {
+	new MainWindow();
     }
+    
 }

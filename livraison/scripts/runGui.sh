@@ -3,4 +3,4 @@
 cd $(dirname $0)/..
 
 cd build/
-java GUI.Main
+java gui.Main

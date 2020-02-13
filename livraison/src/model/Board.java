@@ -193,13 +193,27 @@ public class Board extends AbstractListenableModel {
     /**
      * deplace la case vide si c'est possible dans la direction donnee
      * @param dir la direction dans laquelle deplacer la case vide
-     * @return true si la case a bien ete deplacee, false sinon (sela pourrait servir
+     * @return true si la case a bien ete deplacee, false sinon (cela pourrait servir
      * dans certain cas de renvoyer ce booleen mais je ne l'ai pas utilise)
      */
-    public boolean move(Direction dir){
+    public boolean move(Direction dir) {
+	return this.move(dir, true);
+    }
+    
+    /**
+     * deplace la case vide si c'est possible dans la direction donnee
+     * @param dir la direction dans laquelle deplacer la case vide
+     * @param countMove true si on doit compter le mouvement comme un coup
+     * @return true si la case a bien ete deplacee, false sinon (cela pourrait servir
+     * dans certain cas de renvoyer ce booleen mais je ne l'ai pas utilise)
+     */
+    public boolean move(Direction dir, boolean countMove){
 	if (this.movePossible(dir)) {
 	    AbstractTile destTile = this.getTileInDirectionFromEmptyTile(dir);
 	    this.switchTile(this.emptyTile, destTile);
+	    if (countMove) {
+		this.nbMoves += 1;
+	    }
 	    return true;
 	} else {
 	    return false;
@@ -274,7 +288,7 @@ public class Board extends AbstractListenableModel {
 	while (nbRandomMoves < NB_MOVES_SHUFFLE) {
 	    Direction randomDir = this.getRandomMovePossible();
 	    if (memory == null || !randomDir.equals(memory)) {
-		this.move(randomDir);
+		this.move(randomDir, false);
 		// on garde en memoire l'oppose du coup qu'on vien de faire pour
 		// ne pas faire a la prochaine iteration le coup inverse
 		memory = randomDir.opposite();
@@ -304,7 +318,6 @@ public class Board extends AbstractListenableModel {
     public void playMove(Direction dir) {
 	if (!this.isSolved()) {
 	    this.move(dir);
-	    this.nbMoves += 1;
 	    // on dit aux listeners qu'il s'est passee quelque chose et donc il
 	    // fonts ce qu'ils ont a faire (par exemple s'actualiser pour le gui)
 	    // vient de observer.AbstractListenableModel qui est la classe abstrait

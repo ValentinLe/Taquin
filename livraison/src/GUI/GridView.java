@@ -33,9 +33,11 @@ public class GridView extends JPanel {
 	// laisser dans cet ordre l'image doit etre setter avant de trouver sa
 	// dimention et ensuite la decoupee pour creer les sous-images et les stocker
 	// dans la map
-	this.setImage(imageName);
+	this.imageName = imagePath;
+	this.setImage(imagePath);
 	this.imageSize = findImageSize(this.image);
 	this.fillMapImages();
+	this.repaint();
     }
     
     /**

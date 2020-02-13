@@ -5,8 +5,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import model.Board;
 import model.Direction;
+import model.RandomSolver;
 import observer.ModelListener;
 
 /**
@@ -23,9 +25,11 @@ public class MainWindow extends JFrame implements ModelListener {
     private GridView view;
     private JLabel labNbMoves;
     
+    private final String ressourcesPath = "ressources/";
+    
     public MainWindow() {
 	
-	this.board = new Board(3, 3);
+	this.board = new Board(3, 3, new RandomSolver());
 	// ajout au board du fait que MainWindow va ecouter le board et des que
 	// le board fera un firechange() la methode update de MainWindow (voir plus bas)
 	// sera executee et c'est dans cette fonction qu'on change ce qu'on veut
@@ -43,13 +47,18 @@ public class MainWindow extends JFrame implements ModelListener {
 	
 	// COMPOSANTS
 	
-	this.view = new GridView(board, tileSize, "src/ressources/espace.jpeg");
+	this.view = new GridView(board, tileSize, ressourcesPath + "espace.jpeg");
 	
 	// Control zone
 	
-	Dimension sizeButtons = new Dimension(150, 70);
+	// avec le BoxLayout il faut mettre les elements sur le meme alignement
+	// sinon ca les places bizarrement
+	
+	Dimension sizeButtons = new Dimension(200, 70);
+	Font fontButtons = new Font(Font.SANS_SERIF, Font.BOLD, 16);
 	
 	JButton bRestart = new JButton("Restart");
+	bRestart.setFont(fontButtons);
 	bRestart.setAlignmentX(CENTER_ALIGNMENT);
 	// pour ne pas que le boutton soit focus sinon quand on clic dessus pour
 	// rejouer le focus passe dessus et les events de touche s'executerons sur
@@ -68,9 +77,10 @@ public class MainWindow extends JFrame implements ModelListener {
 	bChangeImage.setAlignmentX(CENTER_ALIGNMENT);
 	bChangeImage.setFocusable(false);
 	bChangeImage.setMaximumSize(sizeButtons);
+	bChangeImage.setFont(fontButtons);
 	bChangeImage.addActionListener(this.getListenerSelectImage());
 	
-	Font fontLabels = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
+	Font fontLabels = new Font(Font.SANS_SERIF, Font.PLAIN, 25);
 	JLabel labTitleNbMoves = new JLabel("Moves");
 	labTitleNbMoves.setFont(fontLabels);
 	labTitleNbMoves.setAlignmentX(CENTER_ALIGNMENT);
@@ -82,14 +92,15 @@ public class MainWindow extends JFrame implements ModelListener {
 	bSolve.setAlignmentX(CENTER_ALIGNMENT);
 	bSolve.setFocusable(false);
 	bSolve.setMaximumSize(sizeButtons);
+	bSolve.setFont(fontButtons);
 	bSolve.addActionListener(new ActionListener() {
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
-		
+		MainWindow.this.board.solve();
 	    }
 	});
 	
-	
+	// listeners sur la fenetre
 	this.addKeyListener(this.getKeyboardEvent());
 	
 	// ASSEMBLAGE DE LA FENETRE
@@ -99,6 +110,8 @@ public class MainWindow extends JFrame implements ModelListener {
 	final int pt = 8;
 	
 	// les createRigidArea c'est pour ajouter une zone vide pour faire le padding
+	// les Glue c'est des contraintes de poussee par exemple si il y a qu'un bouton
+	// on met une Glue au dessus et en dessous et le bouton sera centre verticalement
 	
 	// zone avec les bouttons et tout
 	JPanel controlPanel = new JPanel();
@@ -144,10 +157,11 @@ public class MainWindow extends JFrame implements ModelListener {
      */
     @Override
     public void update(Object source) {
-	// pour l'instant j'ai fait mon bourrin et j'ai dis de repaindre toute la
-	// fenetre
-	this.repaint();
+	// on change le texte du label de compteur de mouvement puis on repaint
+	// ce label et on repaint aussi le dessin de la grille
 	this.labNbMoves.setText("" + this.board.getNbMoves());
+	this.labNbMoves.repaint();
+	this.view.repaint();
     }
     
     /**
@@ -192,21 +206,49 @@ public class MainWindow extends JFrame implements ModelListener {
 	};
     }
     
+    /**
+     * Donne le lister qui lancera le selecteur de fichiers
+     * @return le lister de selecteur de fichiers
+     */
     public ActionListener getListenerSelectImage() {
 	return new ActionListener() {
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
 		JFileChooser chooser = new JFileChooser();
-		chooser.setDialogTitle("Open file");
-		chooser.setMultiSelectionEnabled(true);
-		chooser.setCurrentDirectory(new File("src/ressources/"));
+		// configuration du selecteur de fichier
+		chooser.setDialogTitle("Select image");
+		chooser.setMultiSelectionEnabled(false);
+		chooser.setCurrentDirectory(new File(ressourcesPath));
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "jpg", "png", "jpeg");
+		chooser.setFileFilter(filter);
 		int returnValue = chooser.showOpenDialog(null);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
+		    // si l'utilisateur a fait ouvrir en ayant un fichier de selectionne
 		    File selectedImage = chooser.getSelectedFile();
-		    MainWindow.this.view.loadImage(selectedImage.getAbsolutePath());
+		    // on essaye de charger l'image dans la GridView
+		    try {
+			MainWindow.this.view.loadImage(selectedImage.getAbsolutePath());
+		    } catch (NullPointerException ex) {
+			// si c'est pas une image dans les formats attendus alors
+			// on affiche une popup d'erreur
+			showError("This file isn't an image.");
+		    } 
 		}
 	    }
 	};
+    }
+    
+    /**
+     * Affiche un message d'erreur donné dans un Dialog de type erreur
+     * @param errorMessage le message d'erreur a afficher
+     */
+    public void showError(String errorMessage) {
+        JOptionPane.showMessageDialog(    
+            this,
+            errorMessage,
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+        );
     }
     
 }

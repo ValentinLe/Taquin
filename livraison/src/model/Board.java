@@ -27,6 +27,8 @@ public class Board extends AbstractListenableModel {
     // compteur du nombre de coups effectues
     private int nbMoves;
     
+    private Solver solver;
+    
     // nombre de deplacement aleatoire que le melange devra faire pour bien
     // melanger la grille
     private final int NB_MOVES_SHUFFLE = 10000;
@@ -35,16 +37,27 @@ public class Board extends AbstractListenableModel {
      * constructeur
      * @param width la largeur de la grille
      * @param height la hauteur de la grille
+     * @param solver le solver du taquin
      */
-    public Board(int width, int height) {
+    public Board(int width, int height, Solver solver) {
 	this.width = width;
 	this.height = height;
 	this.nbMoves = 0;
+	this.solver = solver;
 	
 	// doit etre a la fin et respecter l'ordre suivant car la grid doit etre
 	// generee avant de la melanger
 	this.generateGrid();
 	this.shuffle();
+    }
+    
+    /**
+     * constructeur
+     * @param width
+     * @param height 
+     */
+    public Board(int width, int height) {
+	this(width, height, null);
     }
     
     /**
@@ -69,6 +82,24 @@ public class Board extends AbstractListenableModel {
      */
     public int getNbMoves() {
         return nbMoves;
+    }
+    
+    /**
+     * Setter sur le solver du taquin
+     * @param solver le nouveau solver a utiliser
+     */
+    public void setSolver(Solver solver) {
+	this.solver = solver;
+    }
+    
+    /**
+     * resoud le taquin
+     */
+    public void solve() {
+	if (this.solver != null) {
+	    this.solver.solve(this);
+	    this.fireChange();
+	}
     }
     
     /**

@@ -10,8 +10,10 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 import model.AbstractTile;
 import model.Board;
-import model.FullTile;
 
+/**
+ * represente la vue de la grille
+ */
 public class GridView extends JPanel {
     
     private Board board;
@@ -21,6 +23,12 @@ public class GridView extends JPanel {
     private HashMap<Integer, Image> mapImages;
     private int imageSize;
     
+    /**
+     * 
+     * @param board
+     * @param tileSize
+     * @param imageName 
+     */
     public GridView(Board board, int tileSize, String imageName) {
 	this.board = board;
 	this.tileSize = tileSize;
@@ -37,11 +45,15 @@ public class GridView extends JPanel {
 	this.setImage(imagePath);
 	this.imageSize = findImageSize(this.image);
 	this.fillMapImages();
+	// on repaint la grille et on change la map des sous-images car l'image
+	// a peut-etre changee
 	this.repaint();
     }
     
+    
     /**
-     * Taille preferee du JPanel, celle qu'il aura dans la fenetre
+     * Taille preferee du JPanel, celle qu'il aura dans la fenetre sinon il est
+     * considere comme une JPanel vide
      * @return la dimention preferee du JPanel
      */
     @Override
